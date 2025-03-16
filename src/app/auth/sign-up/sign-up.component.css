@@ -1,6 +1,7 @@
 small{
     color: #f91212;
     z-index: 1;
+    font-size: 0.2rem;
     /* color: #fefcfc; */
 }
 .auth-form-container {

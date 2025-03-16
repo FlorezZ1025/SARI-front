@@ -1,9 +1,9 @@
 <div class="auth-form-container">
-    <!-- From Uiverse.io by mahiatlinux --> 
-<div class="image-container">
-    <img src="sari_icon_256x256.png" alt="SARI">
-</div>
-<form [formGroup] = "loginForm" class="form">
+  <!-- From Uiverse.io by mahiatlinux -->
+  <div class="image-container">
+    <img src="sari_icon_256x256.png" alt="SARI" />
+  </div>
+  <form [formGroup]="loginForm" class="form">
     <div class="flex-column">
       <label>Correo electrónico</label>
     </div>
@@ -20,22 +20,20 @@
           ></path>
         </g>
       </svg>
-      <input 
+      <input
         type="text"
         class="input"
         placeholder="Ingresa tu correo"
-        formControlName="email" 
-        />    
+        formControlName="email"
+      />
     </div>
-        @if(loginForm.get('email')?.invalid &&
-        loginForm.get('email')?.touched){
-        @if(loginForm.get('email')?.hasError('required')){
-        <small>Se requiere el correo </small>
-        }
-        @if(loginForm.get('email')?.hasError('email')){
-            <small>Correo inválido</small>
-        } }
-  
+    @if(loginForm.get('email')?.invalid && loginForm.get('email')?.touched){
+    @if(loginForm.get('email')?.hasError('required')){
+    <small>Se requiere el correo </small>
+    } @if(loginForm.get('email')?.hasError('email')){
+    <small>Correo inválido</small>
+    } }
+
     <div class="flex-column">
       <label>Contraseña </label>
     </div>
@@ -53,19 +51,19 @@
           d="m304 224c-8.832031 0-16-7.167969-16-16v-80c0-52.929688-43.070312-96-96-96s-96 43.070312-96 96v80c0 8.832031-7.167969 16-16 16s-16-7.167969-16-16v-80c0-70.59375 57.40625-128 128-128s128 57.40625 128 128v80c0 8.832031-7.167969 16-16 16zm0 0"
         ></path>
       </svg>
-      <input 
-            type="password"
-            class="input"
-            placeholder="Ingresa tu contraseña"
-            formControlName="password"
-            />
+      <input
+        type="password"
+        class="input"
+        placeholder="Ingresa tu contraseña"
+        formControlName="password"
+      />
     </div>
     @if(loginForm.get('password')?.invalid &&
     loginForm.get('password')?.touched){
     @if(loginForm.get('password')?.hasError('required')){
     <small>Se requiere contraseña </small>
     }}
-  
+
     <div class="flex-row">
       <div>
         <input type="radio" />
@@ -73,9 +71,10 @@
       </div>
       <span class="span">Forgot password?</span>
     </div>
-    <button class="button-submit">Sign In</button>
-    <p class="p">Don't have an account? <span class="span"><a routerLink="sign-up">Sign Up</a></span></p>
-    
+    <button class="button-submit" [disabled]="loginForm.invalid" (click)="login()">Sign In</button>
+    <p class="p">
+      Don't have an account?
+      <span class="span"><a routerLink="sign-up">Sign Up</a></span>
+    </p>
   </form>
-  
 </div>

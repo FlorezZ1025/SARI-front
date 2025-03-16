@@ -1,66 +1,119 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { User } from '../../interfaces/user.interface';
+import { tap } from 'rxjs';
+import { CustomValidators } from '../../../shared/custom-validations';
 
 @Component({
   selector: 'sign-up',
   standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    RouterLink
-  ],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './sign-up.component.html',
-  styleUrl: './sign-up.component.css'
+  styleUrl: './sign-up.component.css',
 })
 export class SignUpComponent {
-
   formBuilder = inject(FormBuilder);
-  
-  registerForm: FormGroup = this.formBuilder.group({
-    email: ['',{
-      validators: [
-        Validators.required,
-        Validators.email]
-    }],
-    name:['',{
-      validators: [
-        Validators.required
-      ]
-    }],
-    lastName:['',{
-      validators:
-      [
-        Validators.required,
+  _authService = inject(AuthService);
 
-      ]
-    }],
-    password: ['',{
-      validators: [
-        Validators.required,
-        Validators.minLength(6)]
-    }],
-    confirmPassword: ['',{
-      validators: [
-        Validators.required,
-        Validators.minLength(6)]
-    }],
-    userRole:['',{
-      validators: [
-        Validators.required
-      ]
-    }]
-  })
-  constructor() {
-    this.registerForm.get('userRole')?.valueChanges.subscribe(valor => {
-      console.log('Opción seleccionada:', valor);
+  user: User = {};
+
+  UserRoleOptions = [
+    { value: 'researcher', label: 'Investigador' },
+    { value: 'coordinator', label: 'Coordinador' },
+    { value: 'administrator', label: 'Administrador' },
+  ];
+
+  registerForm: FormGroup = this.formBuilder.group({
+    email: [
+      '',
+      {
+        validators: [
+          Validators.required,
+          Validators.email,
+          Validators.maxLength(30),
+        ],
+      },
+    ],
+    name: [
+      '',
+      {
+        validators: [
+          Validators.required,
+          Validators.pattern('[a-zA-Z ]*'),
+          Validators.maxLength(30),
+        ],
+      },
+    ],
+    lastName: [
+      '',
+      {
+        validators: [
+          Validators.required,
+          Validators.pattern('[a-zA-Z ]*'),
+          Validators.maxLength(30),
+        ],
+      },
+    ],
+    password: [
+      '',
+      {
+        validators: [
+          Validators.required,
+          Validators.minLength(6),
+          Validators.maxLength(30),
+        ],
+      },
+    ],
+    confirmPassword: [
+      '',
+      {
+        validators: [
+          Validators.required,
+          Validators.minLength(6),
+          Validators.maxLength(30),
+          CustomValidators.mustBeEqual('confirmPassword', 'password'),
+        ],
+      },
+    ],
+    role: [
+      '',
+      {
+        validators: [Validators.required],
+      },
+    ],
+  });
+
+  constructor(private _router: Router) {
+    // this._authService.token.subscribe((token) => {
+    //   if (token) {
+    //     this._router.navigate(['/']);
+    //   }
+    // });
+
+    this.registerForm.valueChanges.subscribe((value) => {
+      Object.assign(this.user, value);
     });
   }
-  // onSubmit(){
-  //   console.log(this.registerForm.value)
-  // }
-
-
-
-
+  register() {
+    console.log(this.user);
+    this._authService
+      .doRegister(this.user as User)
+      .pipe(
+        tap((response) => {
+          alert(`${response.message} --- ${response.statusCode}`);
+          if (response.statusCode === 201) {
+            this._router.navigate(['/']);
+          }
+        })
+      )
+      .subscribe();
+  }
 }

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, map, Observable, of, tap } from 'rxjs';
 import { User } from '../interfaces/user.interface';
 import { environment } from '../../environments/environment';
-import { RegisterResponse } from '../interfaces/register-response.interfacer';
+import { AuthResponse } from '../interfaces/auth-response.interfacer';
 import { LoginRequest } from '../interfaces/login-request.interface';
 import { LoginResponse } from '../interfaces/login-response.interface';
 
@@ -12,48 +12,64 @@ import { LoginResponse } from '../interfaces/login-response.interface';
 })
 export class AuthService {
   url = environment.API_URL;
-  private $token: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
-  public get token(): Observable<string> {
-    return this.$token.asObservable();
+  public setSession(token: string): void {
+    localStorage.setItem('token', token);
+  }
+
+  public static get token(): string {
+    return localStorage.getItem('token') || '';
   }
 
   constructor(private _client: HttpClient) {}
 
-  public doLogin(user: LoginRequest): Observable<LoginResponse> {
+  public doLogin(user: LoginRequest): Observable<LoginResponse | AuthResponse> {
     return this._client.post(this.url + '/auth/login', user).pipe(
+      
       tap((response: any) => {
-        console.log('Login successful');
+        console.log(response);
+        this.setSession(response.token);
+      }),
+      map((response) => ({
+          message: response.message,
+          user: {
+            email: response.message,
+            name: response.name,
+            lastName: response.lastName,
+            role: response.role
+          } as User,
+          statusCode: response.statusCode,
+          } as LoginResponse
 
-      })
-    );
+        )),
+
+
+      catchError((error) => of(error).pipe(
+          tap((error) => console.log(error)),
+          map((error) => ({
+            message: error.error.message,
+            statusCode: error.status
+          } as AuthResponse)
+          )
+      ))
+    
+    )
   }
 
-  // public doRegisterTest(user: User): void {
-  //   console.log(user)
-  //   console.log(`${user.email} ${user.password} ${user.role}`);
-  // }
-
-  public doRegister(user: User): Observable<RegisterResponse> {
-    return this._client.post<RegisterResponse>(this.url + '/auth/register', user)
+  public doRegister(user: User): Observable<AuthResponse> {
+    return this._client.post<AuthResponse>(this.url + '/auth/register', user)
     .pipe(
-      tap((response:any) => {
-        console.log(response)
-        console.log(response.status)
-      }),
-
       map((response) => ({ 
         message: response.message,
         statusCode: response.statusCode
-       } as RegisterResponse)),
-
+       } as AuthResponse)),
       catchError((error) => of(error).pipe(
 
-        tap((error) => console.log(error)),
+        tap((error) => console.log(error.error)),
         map((error) => ({ 
           message: error.error.message,
           statusCode: error.status
-         } as RegisterResponse))
+         } as AuthResponse))
       ))
     );
   }

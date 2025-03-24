@@ -7,10 +7,10 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
-import { User } from '../../interfaces/user.interface';
+import { AuthService } from '../../../services/auth.service';
+import { User } from '../../../interfaces/user.interface';
 import { tap } from 'rxjs';
-import { CustomValidators } from '../../../shared/custom-validations';
+import { CustomValidators } from '../../../../shared/custom-validations';
 
 @Component({
   selector: 'sign-up',

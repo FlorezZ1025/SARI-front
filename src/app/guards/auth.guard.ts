@@ -10,7 +10,7 @@ export const authGuard: CanActivateFn = (route, state) => {
   const token = AuthService.token !== '';
   if (!token) {
     console.log('no autorizado');
-    router.navigate(['/']);
+    router.navigate(['/sign-in']);
     return false;
   }
   console.log('autorizado');

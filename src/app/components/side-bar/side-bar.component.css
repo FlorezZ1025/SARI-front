@@ -1,58 +1,53 @@
-.sidebar {
-    height: 100%;
-    width: 8rem;
-    background-color: #1a202c;
-    color: white;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-    transition: background-color 0.3s;
-    position: relative;
+
+:host *:not(.active) {
+  transition: all 300ms ease-in-out;
 }
-.title {
-    position: relative;
-    top: -10rem;
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 40px;
+
+.sidebar-header{
+  padding-top: 24px;
+  text-align: center;
+
+  > img {
+
+    border-radius: 100%;
+    object-fit: cover;
+    margin-bottom: 10px;
+  }
+
+  .header-text {
+    > h2 {
+      margin:0;
+      font-size: 1rem;
+      line-height: 1.5rem;
+    }
+    > p {
+      margin: 0;
+      font-size:0.8rem ;
+    }
+  }
 }
-.button-container {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    width: 60%;
+
+.hide-header-text {
+  opacity: 0;
+  height:0px !important
 }
-/* From Uiverse.io by reshades */ 
-.button {
-    margin-left: -1rem;
-    background-color: #ffffff00;
-    color: #fff;
-    width: 150%;
-    height: 2.9em;
-    border: #3654ff 0.2em solid;
-    border-radius: 11px;
-    text-align: right;
-    transition: all 0.6s ease;
-  }
+.menu-item{
+
+  border-radius: 0px !important;
+  border-left: 5px solid transparent;
+
   
-  .button:hover {
-    background-color: #3654ff;
-    cursor: pointer;
+}
+.active {
+
+  border-left: 5px solid var(--mat-accent);
+
+  font-weight: bold;
+  background-color: rgba(0, 0, 0, 0.05) ;
+  border-radius: 0px !important;
+
+  > mat-icon {
+    color: var(--mat-accent);
   }
-  
-  .button svg {
-    width: 20%;
-    margin: -0.2em 0.8em 1em;
-    position: absolute;
-    display: flex;
-    transition: all 0.6s ease;
-  }
-  
-  .button:hover svg {
-    transform: translateX(5px);
-  }
-  
-  .text {
-    margin: 0 1.5em
-  }
+}
+

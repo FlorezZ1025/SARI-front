@@ -1,4 +1,21 @@
 /* You can add global styles to this file, and also import other style files */
+:root {
+  --mat-primary: #7D0A0A; /* Azul */
+  --mat-accent: #BF3131;  /* Rosa */
+  --mat-warn: #EAD196;    /* Rojo */
+}
+
+.mat-mdc-button {
+  --mdc-theme-primary: var(--mat-primary);
+  --mdc-theme-secondary: var(--mat-accent);
+  --mdc-theme-error: var(--mat-warn);
+  border-radius: 0px;;
+}
+
+
+
+
+
 body{
     margin: 0;
     /* height: 100vh; */
@@ -32,3 +49,5 @@ body{
     }
   }
    */
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

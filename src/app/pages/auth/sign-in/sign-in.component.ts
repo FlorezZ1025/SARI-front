@@ -40,7 +40,7 @@ export class SignInComponent {
 
   constructor(private _router: Router) {
     if(AuthService.token){
-      this._router.navigate(['/home']);
+      this._router.navigate(['/']);
     };
 
     this.loginForm.valueChanges.subscribe((value) => {

@@ -11,10 +11,16 @@ import { LoginResponse } from '../interfaces/login-response.interface';
   providedIn: 'root',
 })
 export class AuthService {
+
   url = environment.API_URL;
 
   public setSession(token: string): void {
     localStorage.setItem('token', token);
+  }
+  
+  //Implementar el logout
+  public static removeSession(): void {
+    localStorage.removeItem('token');
   }
 
   public static get token(): string {

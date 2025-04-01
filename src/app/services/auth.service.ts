@@ -28,6 +28,7 @@ export class AuthService {
 
   public setUser(user: User): void {
     this.currentUserSubject.next(user);
+
   }
 
   public clearUser(): void {
@@ -69,7 +70,6 @@ export class AuthService {
 
         )),
       tap((response: LoginResponse) => {
-        console.log('Login response:', response);
         if (response.user) {
           this.setUser(response.user);
         }

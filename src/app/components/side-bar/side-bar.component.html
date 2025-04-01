@@ -2,10 +2,8 @@
   <img [width]="profilePicSize()" [height]="profilePicSize()" src="sari_icon.jpg" alt=""/>
   <div class="header-text" [class.hide-header-text]="sideNavCollapsed()">
     <h2>SARI</h2>
-    @if(authService.currentUser()){
-
-      <p>{{authService.currentUser()?.name}} {{authService.currentUser()?.lastName}}</p>
-    }
+      <p>{{this.user()?.name}} {{this.user()?.lastName}}</p>
+    
   </div>
 </div>
 <mat-nav-list>

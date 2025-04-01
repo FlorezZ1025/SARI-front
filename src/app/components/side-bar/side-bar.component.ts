@@ -27,8 +27,11 @@ import { Observable } from 'rxjs';
   styleUrl: './side-bar.component.css',
 })
 export class SideBarComponent {
+  
+  user:Signal<User | null | undefined>;
+  
   constructor(private router: Router, public authService: AuthService) {
-    // this.user = this.authService.currentUser;
+     this.user = this.authService.currentUser;
   }
   
 

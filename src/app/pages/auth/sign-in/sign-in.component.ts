@@ -50,7 +50,6 @@ export class SignInComponent {
 
   login() {
     this._authService.doLogin(this.loginRequest).subscribe((response) => {
-      console.log(response)
       alert(response.message);
       if (response.statusCode === 200) {
         this._router.navigate(['/home']);

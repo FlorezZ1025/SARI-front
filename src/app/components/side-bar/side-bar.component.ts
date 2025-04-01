@@ -1,4 +1,4 @@
-import { Component, computed, Input, input, signal } from '@angular/core';
+import { Component, computed, Input, input, Signal, signal } from '@angular/core';
 import { MenuItem } from '../../interfaces/menu-item.interface';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
@@ -8,6 +8,11 @@ import {
   RouterModule,
   RouterLinkActive,
 } from '@angular/router';
+
+import { AuthService } from '../../services/auth.service';
+import { User } from '../../interfaces/user.interface';
+import { Observable } from 'rxjs';
+
 @Component({
   selector: 'side-bar',
   standalone: true,
@@ -22,11 +27,10 @@ import {
   styleUrl: './side-bar.component.css',
 })
 export class SideBarComponent {
-  constructor(private router: Router) {}
-
-  isActive(route: string) {
-    return this.router.url === route;
+  constructor(private router: Router, public authService: AuthService) {
+    // this.user = this.authService.currentUser;
   }
+  
 
   // @input() collapsed// Signal to manage the collapsed state of the sidebar
   sideNavCollapsed = signal(false);
@@ -34,13 +38,20 @@ export class SideBarComponent {
     this.sideNavCollapsed.set(val);
   }
 
-  menuItems = signal<MenuItem[]>([
-    { icon: 'dashboard', label: 'Home', route: '/home' },
-    { icon: 'menu_book', label: 'Articles', route: '/articles' },
-    { icon: 'science', label: 'Proyects', route: '/proyects' },
-    { icon: 'book', label: 'Thesis', route: '/thesis' },
-    { icon: 'logout', label: 'Salir', route: '/contact' },
-  ]);
 
+
+  
+  menuItems = signal<MenuItem[]>([
+    { icon: 'dashboard', label: 'Inicio', route: '/home' },
+    { icon: 'menu_book', label: 'Articulos', route: '/articles' },
+    { icon: 'science', label: 'Proyectos', route: '/projects' },
+    { icon: 'book', label: 'Tesis', route: '/thesis' },
+  ]);
+  
   profilePicSize = computed(() => (this.sideNavCollapsed() ? '32' : '100'));
+  
+  logout() {
+    AuthService.removeSession();  
+    this.router.navigate(['/sign-in']);
+  }
 }

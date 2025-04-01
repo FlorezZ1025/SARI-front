@@ -2,7 +2,10 @@
   <img [width]="profilePicSize()" [height]="profilePicSize()" src="sari_icon.jpg" alt=""/>
   <div class="header-text" [class.hide-header-text]="sideNavCollapsed()">
     <h2>SARI</h2>
-    <p>Nombre del profesor</p>
+    @if(authService.currentUser()){
+
+      <p>{{authService.currentUser()?.name}} {{authService.currentUser()?.lastName}}</p>
+    }
   </div>
 </div>
 <mat-nav-list>
@@ -13,11 +16,24 @@
       routerLinkActive
       routerLinkActive="active"
       >
-      <mat-icon matListItemIcon>{{item.icon}}</mat-icon>
+      <mat-icon
+      matListItemIcon>{{item.icon}}</mat-icon>
       @if (!sideNavCollapsed()) {
         <span matListItemTitle>{{item.label}}</span>
       }
     </a>
   }
 </mat-nav-list>
-<footer></footer>
+<div class="logout">
+  <button  
+    (click)="logout()"
+    routerLinkActive
+    routerLinkActive="active"
+    >
+    <mat-icon matListItemIcon>logout</mat-icon>
+    @if (!sideNavCollapsed()) {
+      <span matListItemTitle>Salir</span>
+    }
+
+  </button>
+</div>

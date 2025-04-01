@@ -1,8 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
 :root {
-  --mat-primary: #7D0A0A; /* Azul */
-  --mat-accent: #BF3131;  /* Rosa */
-  --mat-warn: #EAD196;    /* Rojo */
+  --mat-primary: #7D0A0A; /*  */
+  --mat-accent: #BF3131;  /*  */
+  --mat-warn: #EAD196;    /*  */
+  --mat-text: #000000;   /*  */
 }
 
 .mat-mdc-button {
@@ -18,6 +19,7 @@
 
 body{
     margin: 0;
+    
     /* height: 100vh; */
     font-family:sans-serif;
 }

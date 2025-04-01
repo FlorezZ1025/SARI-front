@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, map, Observable, of, tap } from 'rxjs';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { BehaviorSubject, catchError, distinctUntilChanged, map, Observable, of, tap } from 'rxjs';
 import { User } from '../interfaces/user.interface';
 import { environment } from '../../environments/environment';
 import { AuthResponse } from '../interfaces/auth-response.interfacer';
@@ -13,6 +14,25 @@ import { LoginResponse } from '../interfaces/login-response.interface';
 export class AuthService {
 
   url = environment.API_URL;
+
+  private currentUserSubject: BehaviorSubject<User | null> = new BehaviorSubject<User | null>(null);
+  public currentUser$: Observable<User | null> = this.currentUserSubject.asObservable().pipe(distinctUntilChanged());
+  public currentUser = toSignal(this.currentUser$);
+
+
+  constructor(private _client: HttpClient) {}
+
+  public getCurrentUser(): User | null {
+    return this.currentUserSubject.value;
+  }
+
+  public setUser(user: User): void {
+    this.currentUserSubject.next(user);
+  }
+
+  public clearUser(): void {
+    this.currentUserSubject.next(null);
+  }
 
   public setSession(token: string): void {
     localStorage.setItem('token', token);
@@ -27,7 +47,6 @@ export class AuthService {
     return localStorage.getItem('token') || '';
   }
 
-  constructor(private _client: HttpClient) {}
 
   public doLogin(user: LoginRequest): Observable<LoginResponse | AuthResponse> {
     return this._client.post(this.url + '/auth/login', user).pipe(
@@ -36,6 +55,7 @@ export class AuthService {
         console.log(response);
         this.setSession(response.token);
       }),
+
       map((response) => ({
           message: response.message,
           user: {
@@ -48,7 +68,12 @@ export class AuthService {
           } as LoginResponse
 
         )),
-
+      tap((response: LoginResponse) => {
+        console.log('Login response:', response);
+        if (response.user) {
+          this.setUser(response.user);
+        }
+      }),
 
       catchError((error) => of(error).pipe(
           tap((error) => console.log(error)),

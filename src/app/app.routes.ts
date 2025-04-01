@@ -4,7 +4,7 @@ import { SignUpComponent } from './pages/auth/sign-up/sign-up.component';
 import { HomeComponent } from './pages/home/home.component';
 import { authGuard } from './guards/auth.guard';
 import { ArticlesComponent } from './pages/articles/articles.component';
-import { ProyectsComponent } from './pages/proyects/proyects.component';
+import { ProjectsComponent } from './pages/proyects/projects.component';
 import { ThesisComponent } from './pages/thesis/thesis.component';
 import { LayoutComponent } from './pages/layout/layout.component';
 
@@ -33,8 +33,8 @@ export const routes: Routes = [
                 component: ArticlesComponent,
             },
             {
-                path: 'proyects',
-                component: ProyectsComponent,
+                path: 'projects',
+                component: ProjectsComponent,
             },
             {
                 path: 'thesis',
@@ -42,8 +42,8 @@ export const routes: Routes = [
             }
         ]
     },
-    {
+    { 
         path:'**',
-        component: SignUpComponent
+        component: SignInComponent
     }
 ];

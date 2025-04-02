@@ -3,6 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { User } from '../../interfaces/user.interface';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
+import { IndicatorService } from '../../services/indicator.service';
 
 @Component({
   selector: 'app-articles',
@@ -17,16 +18,20 @@ export class ArticlesComponent {
   fullName: string;
   separatedFullName: string;
 
-  constructor(private _client:HttpClient, public authService:AuthService) {
+  constructor(private _client:HttpClient, public authService:AuthService, private _indicatorService:IndicatorService) {
     this.user = this.authService.currentUser;
     this.fullName  = `${this.user()?.name} ${this.user()?.lastName}`|| '';
-    this.separatedFullName = this.fullName.toLowerCase().split(' ').join('-');
+    this.separatedFullName = this.fullName.toLowerCase().split(' ').join('-');  
   
   }
 
   extractFromPure():void{
-    console.log(this.separatedFullName);
-    console.log(this.fullName);
+    console.log('entrando con el nombre: ', this.separatedFullName);
+    this._indicatorService.getPureArticles(this.separatedFullName).subscribe((response: any) => {
+      // console.log(response);
+      // alert('Se ha extraido el texto del articulo con exito');
+    })
+    // console.log(this.separatedFullName);
   }
 
 

@@ -34,15 +34,10 @@ export class SideBarComponent {
      this.user = this.authService.currentUser;
   }
   
-
-  // @input() collapsed// Signal to manage the collapsed state of the sidebar
   sideNavCollapsed = signal(false);
   @Input() set collapsed(val: boolean) {
     this.sideNavCollapsed.set(val);
   }
-
-
-
   
   menuItems = signal<MenuItem[]>([
     { icon: 'dashboard', label: 'Inicio', route: '/home' },
@@ -54,7 +49,7 @@ export class SideBarComponent {
   profilePicSize = computed(() => (this.sideNavCollapsed() ? '32' : '100'));
   
   logout() {
-    AuthService.removeSession();  
+    this.authService.removeSession();  
     this.router.navigate(['/sign-in']);
   }
 }

@@ -47,7 +47,7 @@ export class SignUpComponent {
       {
         validators: [
           Validators.required,
-          Validators.pattern('[a-zA-Z ]*'),
+          Validators.pattern('^[A-Za-zÁÉÍÓÚÜáéíóúüñÑ\\s]+$'),
           Validators.maxLength(30),
         ],
       },
@@ -57,7 +57,7 @@ export class SignUpComponent {
       {
         validators: [
           Validators.required,
-          Validators.pattern('[a-zA-Z ]*'),
+          Validators.pattern('^[A-Za-zÁÉÍÓÚÜáéíóúüñÑ\\s]+$'),
           Validators.maxLength(30),
         ],
       },

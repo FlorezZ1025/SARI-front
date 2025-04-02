@@ -10,6 +10,7 @@ export class JwtInterceptor implements HttpInterceptor {
   constructor() { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    console.log('Interceptando la peticion: ', req.url);
     let cloneReq = req.clone()
     if(!req.url.includes('login') || !req.url.includes('register')){
       cloneReq = req.clone({

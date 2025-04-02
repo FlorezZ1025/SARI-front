@@ -3,5 +3,6 @@ export interface ArticleItem {
     date: string;
     hyperlink: string;
     authors: string[];
+    state?: string;
 
 }

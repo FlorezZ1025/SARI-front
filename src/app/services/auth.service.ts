@@ -46,7 +46,6 @@ export class AuthService {
 
   public setSession(token: string): void {
     localStorage.setItem('token', token);
-    console.log(token);
     this.setUser(this.decodeToken(token));
   }
 
@@ -73,7 +72,6 @@ export class AuthService {
     return this._client.post(this.url + '/auth/login', user).pipe(
      
       tap((response: any) => {
-        // console.log(JSON.parse(response.token));  
         this.setSession(response.token);
       }),
       map(

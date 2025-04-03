@@ -53,15 +53,20 @@
     align-items: center;
     /* margin-right: 60px; */
     > button {
-        background-color: var(--mat-warn);
+        background-color: #d08f5d;
         margin-right: 10px;
         width: 45%;
      }
 }
+.info-stock {
+
+    display: grid;
+    place-content: center;
+}
 
 .cards {
     display: grid;
-    gap: 20px;
+    gap: 10px;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     align-items: stretch;
 }
@@ -69,17 +74,22 @@
 .card {
     background-color: #d4bc92;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-    padding: 20px;
-    border-radius: 10px;
+    padding: 15px;
+    border-radius: 6px;
     text-align: center;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    
+    > ul {
+        text-align: left;
+        color: #616161;
+    }
 }
 
 .card h3 {
     color: #060606;
+    word-wrap: break-word;
+    font-size: medium;
 }
 
 .card p {
@@ -91,6 +101,7 @@
 }
 
 .card small {
+    margin-top: 5px;
     color: #36383a;
     word-wrap: break-word;
     font-size: 8px;
@@ -98,5 +109,25 @@
     > a {
         color: #4c4e51;
         text-decoration: none;
+    }
+}
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    text-align: center;
+    color: #616161;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 20px;
+}
+.spinner-container {
+    display: grid;
+    place-content: center;
+    height: 50vh;
+    > mat-spinner {
+        transform: translateY(-2.1rem);
     }
 }

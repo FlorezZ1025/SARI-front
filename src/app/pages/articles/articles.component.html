@@ -7,24 +7,40 @@
       <div class="header-section">
         <h1>Tus artículos</h1>
         <div class="article-options">
-          <button mat-fab >Agregrar artículo</button>
+          <button mat-fab>Agregrar artículo</button>
           <button mat-fab (click)="extractFromPure()">Importar de PURE</button>
         </div>
       </div>
       <div class="cards">
-        @for (article of articles; track trackByIndex ) {
-          <div class="card">
-            <h3>{{article.title}}</h3>
-            <p><strong>{{formatAuthors(article.authors)}}</strong></p>
-            <small>{{article.date}}</small>
-            @if(article.hyperlink === "No disponible") {
-              <small>No disponible</small>
-            }@else{
-              <small><a [href]="article.hyperlink" target="_blank" >Enlace Doi</a></small>
+        @if (articles.length === 0) {
+        <div class="empty-state">
+          <mat-icon>article</mat-icon>
+          <h3>No hay artículos disponibles</h3>
+          <p>Agrega un artículo para comenzar a ver tus publicaciones.</p>
+        </div>
+        }@else { @for (article of articles; track trackByIndex ) {
+        <div class="card">
+          <h3>{{ article.title }}</h3>
+          <ul>
+            @for(author of article.authors; track trackByIndex) {
+            <li>
+              <p>{{ author }}</p>
+            </li>
             }
-            
-          </div>
-        }
+          </ul>
+
+          <small>{{ article.date }}</small>
+
+          @if(article.hyperlink === "No disponible") {
+          <small>No disponible</small>
+          }@else{
+          <small
+            ><a [href]="article.hyperlink" target="_blank">Enlace Doi</a></small
+          >
+          }
+        </div>
+        } }
+
       </div>
     </section>
   </div>

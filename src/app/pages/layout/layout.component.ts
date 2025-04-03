@@ -5,6 +5,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterOutlet } from '@angular/router';
 import { SideBarComponent } from '../../components/side-bar/side-bar.component';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-layout',
@@ -15,7 +16,8 @@ import { SideBarComponent } from '../../components/side-bar/side-bar.component';
         MatButtonModule,
         MatSidenavModule,
         RouterOutlet,
-        SideBarComponent
+        SideBarComponent,
+        MatProgressSpinnerModule
     
   ],
   templateUrl: './layout.component.html',

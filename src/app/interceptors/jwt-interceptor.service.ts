@@ -14,7 +14,8 @@ export class JwtInterceptor implements HttpInterceptor {
     let cloneReq = req.clone()
     if(!req.url.includes('login') || !req.url.includes('register')){
       cloneReq = req.clone({
-        setHeaders: {
+        setHeaders: { 
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${AuthService.token}`
         }
       })

@@ -9,6 +9,13 @@
           <side-bar [collapsed]="collapsed()" />
       </mat-sidenav>
       <mat-sidenav-content [style.margin-left]="sidenavWidth()">
-        <router-outlet/>
+        @defer () {
+          <router-outlet/>
+        }
+        <!-- @loading(minimum 0.2s) {
+          <div class="spinner-container">
+            <mat-spinner mode="indeterminate" ></mat-spinner>
+          </div>
+        } -->
     </mat-sidenav-content>
 </mat-sidenav-container>

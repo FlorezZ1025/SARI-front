@@ -5,7 +5,7 @@ import { environment } from '../../environments/environment';
 import { BehaviorSubject, catchError, map, Observable, of, tap } from 'rxjs';
 import { ArticleItem } from '../interfaces/article-item.interface';
 import { ArticlesResponse } from '../interfaces/articles-response.interface';
-import { JwtInterceptor } from '../interceptors/jwt-interceptor.service';
+import { JwtInterceptor } from '../interceptors/jwt.interceptor';
 
 @Injectable({
   providedIn: 'root',
@@ -19,9 +19,9 @@ export class IndicatorService {
   constructor(private _client: HttpClient, private _authService: AuthService) {
     this.articles$ = this.articleSubject.asObservable();
   }
-  getArticleSubjectValue(): Observable<ArticleItem[]> {
-    return this.articleSubject.asObservable();
-  }
+  // getArticleSubjectValue(): Observable<ArticleItem[]> {
+  //   return this.articleSubject.asObservable();
+  // }
 
   setArticlesInLocalStorage(articles: ArticleItem[]): void {
     const userId = this._authService.currentUser()?.email;

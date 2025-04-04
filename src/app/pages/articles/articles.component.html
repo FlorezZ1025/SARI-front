@@ -7,22 +7,27 @@
       <div class="header-section">
         <h1>Tus artículos</h1>
         <div class="article-options">
-          <button mat-fab>Agregrar artículo</button>
+          <button mat-fab (click)="createArticle()">Agregrar artículo</button>
           <button mat-fab (click)="extractFromPure()">Importar de PURE</button>
         </div>
       </div>
       <div class="cards">
-        @if (articles.length === 0) {
+        @if(loading$){
+        <div class="spinner-container">
+          <mat-spinner></mat-spinner>
+          <h3>Cargando artículos...</h3>
+        </div>
+        }@else if (articles.length === 0) {
         <div class="empty-state">
           <mat-icon>article</mat-icon>
           <h3>No hay artículos disponibles</h3>
           <p>Agrega un artículo para comenzar a ver tus publicaciones.</p>
         </div>
-        }@else { @for (article of articles; track trackByIndex ) {
+        }@else { @for (article of articles; track article.id ) {
         <div class="card">
           <h3>{{ article.title }}</h3>
           <ul>
-            @for(author of article.authors; track trackByIndex) {
+            @for(author of article.authors;track author) {
             <li>
               <p>{{ author }}</p>
             </li>
@@ -40,7 +45,6 @@
           }
         </div>
         } }
-
       </div>
     </section>
   </div>

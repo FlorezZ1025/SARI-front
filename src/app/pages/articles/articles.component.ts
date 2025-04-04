@@ -65,7 +65,7 @@ createArticle() {
     this._indicatorService
       .getPureArticles(this.separatedFullName)
       .subscribe((response: any) => {
-        alert(response.message);
+        alert(response.message + ' Inténtalo más tarde.');
         this._router.navigate(['/articles']);
       });
   }

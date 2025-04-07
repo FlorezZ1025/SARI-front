@@ -6,6 +6,7 @@ import { BehaviorSubject, catchError, map, Observable, of, tap } from 'rxjs';
 import { ArticleItem } from '../interfaces/article-item.interface';
 import { ArticlesResponse } from '../interfaces/articles-response.interface';
 import { JwtInterceptor } from '../interceptors/jwt.interceptor';
+import { state } from '@angular/animations';
 
 @Injectable({
   providedIn: 'root',
@@ -48,16 +49,20 @@ export class IndicatorService {
       map(
         (response) =>
           ({
-            articles: response.data,
+            articles: response.data?.map((article: ArticleItem) => ({
+              ...article,
+              id: Date.now() + Math.random(),
+              state: 'Published',
+            })),
             message: response.message,
-            status: response.status,
+            status: response.statusCode,
           } as ArticlesResponse)
       ),
       tap((response) => {
         this.setArticlesInLocalStorage(response.articles || []);
         console.log('Articles set in local storage');
         this.articleSubject.next(response.articles || []);
-        console.table(response.articles || []); 
+        // console.table(response.articles || []); 
       }),
 
       catchError((error) =>

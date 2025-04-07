@@ -1,4 +1,4 @@
-import { Component, Signal } from '@angular/core';
+import { Component, inject, Signal } from '@angular/core';
 import { User } from '../../interfaces/user.interface';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
@@ -11,6 +11,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIcon } from '@angular/material/icon';
 import { LoaderService } from '../../services/loader.service';
+import { ModalService } from '../../services/modal.service';
+import { ModalComponent } from '../../components/modal/modal.component';
 
 @Component({
   selector: 'app-articles',
@@ -20,14 +22,14 @@ import { LoaderService } from '../../services/loader.service';
   styleUrl: './articles.component.css',
 })
 export class ArticlesComponent {
-createArticle() {
-  console.log(this.loading$)
-}
+
   user: Signal<User | null | undefined>;
   fullName: string;
   separatedFullName: string;
   loading$: any;
   articles: ArticleItem[] = [];
+
+  private readonly _modalSvc = inject(ModalService)
 
   constructor(
     private _client: HttpClient,
@@ -49,6 +51,9 @@ createArticle() {
       this.loading$ = loading;
     });
   }
+  createArticle() {
+    this._modalSvc.openModal<ModalComponent, ArticleItem>(ModalComponent)
+  }
 
   formatAuthors(authors: string[]): string {
     console.log(this.loading$)
@@ -65,8 +70,11 @@ createArticle() {
     this._indicatorService
       .getPureArticles(this.separatedFullName)
       .subscribe((response: any) => {
-        alert(response.message + ' Inténtalo más tarde.');
-        this._router.navigate(['/articles']);
+        if (response.status === 200) {
+          alert(response.message);
+        }else{
+          alert('Error: ' + response.message + ' inténtalo más tarde');
+        }
       });
   }
 }

@@ -52,7 +52,7 @@ export class SignInComponent {
     this._authService.doLogin(this.loginRequest).subscribe((response) => {
       alert(response.message);
       if (response.statusCode === 200) {
-        this._router.navigate(['/home']);
+        this._router.navigate(['/articles']);
       }
     });
   }

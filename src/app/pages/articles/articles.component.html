@@ -25,6 +25,7 @@
         </div>
         }@else { @for (article of articles; track article.id ) {
         <div class="card">
+          <span class="badge">{{article.state}}</span>
           <h3>{{ article.title }}</h3>
           <ul>
             @for(author of article.authors;track author) {

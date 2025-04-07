@@ -72,6 +72,7 @@
 }
 
 .card {
+    position: relative;
     background-color: #d4bc92;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
     padding: 15px;
@@ -86,7 +87,21 @@
     }
 }
 
+.card .badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: #4caf50;
+    color: white;
+    padding: 5px 10px;
+    font-size: 12px;
+    border-radius: 20px;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  
+}
 .card h3 {
+    margin-top: 25px;
     color: #060606;
     word-wrap: break-word;
     font-size: medium;

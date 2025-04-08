@@ -2,7 +2,7 @@ import { Component, inject, Signal } from '@angular/core';
 import { User } from '../../interfaces/user.interface';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
-import { IndicatorService } from '../../services/indicator.service';
+import { ArticleService } from '../../services/article.service';
 import { ArticleItem } from '../../interfaces/article-item.interface';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, of } from 'rxjs';
@@ -12,7 +12,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIcon } from '@angular/material/icon';
 import { LoaderService } from '../../services/loader.service';
 import { ModalService } from '../../services/modal.service';
-import { ModalComponent } from '../../components/modal/modal.component';
+import { ModalComponent } from '../../components/article-modal/article-modal.component';
 
 @Component({
   selector: 'app-articles',
@@ -34,7 +34,7 @@ export class ArticlesComponent {
   constructor(
     private _client: HttpClient,
     public authService: AuthService,
-    private _indicatorService: IndicatorService,
+    private _articleService: ArticleService,
     private _router: Router,
     private _loaderService:LoaderService,
   ) {
@@ -43,8 +43,8 @@ export class ArticlesComponent {
     this.fullName = `${this.user()?.name} ${this.user()?.lastName}` || '';
     this.separatedFullName = this.fullName.toLowerCase().split(' ').join('-');
 
-    this._indicatorService.articles$.subscribe(() => {
-      this.articles = this._indicatorService.getArticlesFromLocalStorage();
+    this._articleService.articles$.subscribe(() => {
+      this.articles = this._articleService.getArticlesFromLocalStorage();
       this.articles = this.articles.map((article) => ({...article, id: Date.now()+Math.random()}));
     });
     this._loaderService.loading$.subscribe((loading) => {
@@ -61,13 +61,13 @@ export class ArticlesComponent {
     const uniqueAuthors = Array.from(new Set(authors));
     return uniqueAuthors.join(', ');
   }
-
-  // trackByIndex(index: number, item: any): number {
-  //   return item.id;
-  // }
+  deleteLastOne():void{
+    this._articleService.deleteLastArticle();
+  }
+  
   extractFromPure(): void {
     console.log('entrando con el nombre: ', this.separatedFullName);
-    this._indicatorService
+    this._articleService
       .getPureArticles(this.separatedFullName)
       .subscribe((response: any) => {
         if (response.status === 200) {

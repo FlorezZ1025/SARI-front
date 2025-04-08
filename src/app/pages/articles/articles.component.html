@@ -9,6 +9,7 @@
         <div class="article-options">
           <button mat-fab (click)="createArticle()">Agregrar artículo</button>
           <button mat-fab (click)="extractFromPure()">Importar de PURE</button>
+          <!-- <button mat-fab (click)="deleteLastOne()">Eliminar el último</button> -->
         </div>
       </div>
       <div class="cards">
@@ -25,7 +26,17 @@
         </div>
         }@else { @for (article of articles; track article.id ) {
         <div class="card">
-          <span class="badge">{{article.state}}</span>
+          @if(article.state === "Published") {
+          <span class="badge published">Publicado</span>
+          }@else if (article.state === 'sometido') {
+          <span class="badge submitted">{{article.state}}</span>
+          }@else if (article.state === 'escritura') {
+          <span class="badge writing">{{article.state}}</span>
+          }@else {
+          <span class="badge accepted">{{article.state}}</span>
+          }
+
+
           <h3>{{ article.title }}</h3>
           <ul>
             @for(author of article.authors;track author) {
@@ -37,12 +48,15 @@
 
           <small>{{ article.date }}</small>
 
-          @if(article.hyperlink === "No disponible") {
-          <small>No disponible</small>
-          }@else{
-          <small
-            ><a [href]="article.hyperlink" target="_blank">Enlace Doi</a></small
-          >
+          @if(article.state === "Published") {
+
+            @if(article.hyperlink === "No disponible") {
+            <small>No disponible</small>
+            }@else{
+            <small
+              ><a [href]="article.hyperlink" target="_blank">Enlace Doi</a></small
+            >
+            }
           }
         </div>
         } }

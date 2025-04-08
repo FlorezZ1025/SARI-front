@@ -88,17 +88,28 @@
 }
 
 .card .badge {
+    text-transform: capitalize;
     position: absolute;
     top: 10px;
     left: 10px;
-    background-color: #4caf50;
     color: white;
     padding: 5px 10px;
     font-size: 12px;
     border-radius: 20px;
     font-weight: bold;
     box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-  
+}
+.writing {
+    background-color: #f44336;
+}
+.published {
+    background-color: #4caf50;
+}
+.submitted {
+    background-color: #2196f3;
+}
+.accepted {
+    background-color: #ff9800;
 }
 .card h3 {
     margin-top: 25px;

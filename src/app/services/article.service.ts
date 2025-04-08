@@ -11,7 +11,7 @@ import { state } from '@angular/animations';
 @Injectable({
   providedIn: 'root',
 })
-export class IndicatorService {
+export class ArticleService {
   url = environment.API_URL;
 
   private articleSubject = new BehaviorSubject<ArticleItem[]>([]);
@@ -20,9 +20,24 @@ export class IndicatorService {
   constructor(private _client: HttpClient, private _authService: AuthService) {
     this.articles$ = this.articleSubject.asObservable();
   }
-  // getArticleSubjectValue(): Observable<ArticleItem[]> {
-  //   return this.articleSubject.asObservable();
-  // }
+
+  deleteLastArticle(): void {
+    const userId = this._authService.currentUser()?.email;
+    const articles = this.getArticlesFromLocalStorage();
+    if (articles.length > 0) {
+      articles.pop();
+      localStorage.setItem(`articles ${userId}`, JSON.stringify(articles));
+      this.articleSubject.next(articles);
+    }
+  }
+
+  createArticle(article: ArticleItem): void {
+    const userId = this._authService.currentUser()?.email;
+    const articles = this.getArticlesFromLocalStorage();
+    articles.push(article);
+    localStorage.setItem(`articles ${userId}`, JSON.stringify(articles));
+    this.articleSubject.next(articles);
+  }
 
   setArticlesInLocalStorage(articles: ArticleItem[]): void {
     const userId = this._authService.currentUser()?.email;
@@ -51,7 +66,7 @@ export class IndicatorService {
           ({
             articles: response.data?.map((article: ArticleItem) => ({
               ...article,
-              id: Date.now() + Math.random(),
+              id: Date.now() + (Math.random()*Math.random())*1000,
               state: 'Published',
             })),
             message: response.message,

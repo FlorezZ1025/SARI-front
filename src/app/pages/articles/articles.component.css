@@ -19,15 +19,6 @@
     padding: 20px;
 }
 
-/* header input {
-    width: 100%;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    background-color: #1e293b;
-    color: white;
-} */
-
 .sysmtem-overview {
     min-height: 100dvh;
     height: 100%;
@@ -53,7 +44,8 @@
     align-items: center;
     /* margin-right: 60px; */
     > button {
-        background-color: #d08f5d;
+        background-color: var(--mat-rojo-institucional);
+        color: white;
         margin-right: 10px;
         width: 45%;
      }
@@ -64,23 +56,31 @@
     place-content: center;
 }
 
-.cards {
-    display: grid;
-    gap: 10px;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    align-items: stretch;
+.all-cards {
+    display: flex;
+    flex-direction: column;
 }
+.year-cards{
+    display: flex;
+    /* grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); */
+    flex-wrap: wrap;
+    gap: 10px;
+    /* align-items: stretch; */
 
+}
 .card {
     position: relative;
-    background-color: #d4bc92;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    background-color: var(--mat-gris-claro);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 1.2);
     padding: 15px;
     border-radius: 6px;
+    /* border: var(--mat-negro-intenso) 0.2px solid; */
     text-align: center;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    width: 20%;
+    min-height: fit-content;
     > ul {
         text-align: left;
         color: #616161;
@@ -164,5 +164,31 @@
      > mat-spinner {
         display: flex;
         justify-content: center;
-    } 
+    }
 }
+
+.year-divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 2rem 0;
+    > span {
+        font-weight: bold;
+        color: var(--mat-negro-intenso);
+    }
+  }
+  
+  .year-divider::before,
+  .year-divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 2px solid #ccc;
+  }
+  
+  .year-divider:not(:empty)::before {
+    margin-right: .3em;
+  }
+  .year-divider:not(:empty)::after {
+    margin-left: .3em;
+  }
+  

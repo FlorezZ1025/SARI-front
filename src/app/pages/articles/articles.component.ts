@@ -13,6 +13,7 @@ import { MatIcon } from '@angular/material/icon';
 import { LoaderService } from '../../services/loader.service';
 import { ModalService } from '../../services/modal.service';
 import { ModalComponent } from '../../components/article-modal/article-modal.component';
+import { ArticleGroup } from '../../interfaces/article-group.interface';
 
 @Component({
   selector: 'app-articles',
@@ -28,29 +29,53 @@ export class ArticlesComponent {
   separatedFullName: string;
   loading$: any;
   articles: ArticleItem[] = [];
+  groupedArticles: ArticleGroup[] = [];
+  sortedYears: string[] = [];
 
   private readonly _modalSvc = inject(ModalService)
 
   constructor(
-    private _client: HttpClient,
-    public authService: AuthService,
+    public _authService: AuthService,
     private _articleService: ArticleService,
     private _router: Router,
     private _loaderService:LoaderService,
   ) {
-    this.user = this.authService.currentUser;
+    this.user = this._authService.currentUser;
 
     this.fullName = `${this.user()?.name} ${this.user()?.lastName}` || '';
     this.separatedFullName = this.fullName.toLowerCase().split(' ').join('-');
 
     this._articleService.articles$.subscribe(() => {
-      this.articles = this._articleService.getArticlesFromLocalStorage();
-      this.articles = this.articles.map((article) => ({...article, id: Date.now()+Math.random()}));
+      this.articles = this._articleService.getCurrentArticles();
+      this.groupedArticles = this.groupArticlesByYear(this.articles);
+      this.sortedYears = this.groupedArticles.map((group) => group.year);
     });
     this._loaderService.loading$.subscribe((loading) => {
       this.loading$ = loading;
     });
   }
+
+  groupArticlesByYear(articles: ArticleItem[]): ArticleGroup[] { 
+    const map = new Map<string, ArticleItem[]>();
+
+    articles.forEach(item => {
+      const year = item.date.match(/\d{4}/)?.[0];
+      if (year) {
+        if (!map.has(year)) {
+          map.set(year, []);
+        }
+        map.get(year)?.push(item);
+      }
+    });
+  
+    const groups: ArticleGroup[] = Array.from(map.entries())
+      .map(([year, articles]) => ({ year, articles }))
+      .sort((a, b) => +b.year - +a.year); // ordena por año descendente
+    
+    return groups;
+  
+  }
+
   createArticle() {
     this._modalSvc.openModal<ModalComponent, ArticleItem>(ModalComponent)
   }

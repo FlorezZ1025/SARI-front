@@ -1,4 +1,4 @@
-<mat-toolbar class="mat-elevator-z3" style="background-color: red;">
+<mat-toolbar class="mat-elevator-z3" >
     <button mat-icon-button (click)="collapsed.set(!collapsed())">
       <mat-icon>menu</mat-icon>
     </button>
@@ -12,10 +12,5 @@
         @defer () {
           <router-outlet/>
         }
-        <!-- @loading(minimum 0.2s) {
-          <div class="spinner-container">
-            <mat-spinner mode="indeterminate" ></mat-spinner>
-          </div>
-        } -->
     </mat-sidenav-content>
 </mat-sidenav-container>

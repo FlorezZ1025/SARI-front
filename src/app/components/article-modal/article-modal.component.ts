@@ -55,7 +55,7 @@ export class ModalComponent {
       {
         validators: [
           Validators.required,
-          Validators.maxLength(100),
+          Validators.maxLength(350),
           Validators.minLength(5),
         ],
       },

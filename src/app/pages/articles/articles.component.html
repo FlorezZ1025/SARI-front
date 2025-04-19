@@ -12,11 +12,11 @@
           <!-- <button mat-fab (click)="deleteLastOne()">Eliminar el último</button> -->
         </div>
       </div>
-      <div class="cards">
+      <div class="all-cards">
         @if(loading$){
         <div class="spinner-container">
           <mat-spinner></mat-spinner>
-          <h3>Cargando artículos...</h3>
+          <h3>Cargando artículos, puede tardar unos minutos...</h3>
         </div>
         }@else if (articles.length === 0) {
         <div class="empty-state">
@@ -24,41 +24,55 @@
           <h3>No hay artículos disponibles</h3>
           <p>Agrega un artículo para comenzar a ver tus publicaciones.</p>
         </div>
-        }@else { @for (article of articles; track article.id ) {
-        <div class="card">
-          @if(article.state === "Published") {
-          <span class="badge published">Publicado</span>
-          }@else if (article.state === 'sometido') {
-          <span class="badge submitted">{{article.state}}</span>
-          }@else if (article.state === 'escritura') {
-          <span class="badge writing">{{article.state}}</span>
-          }@else {
-          <span class="badge accepted">{{article.state}}</span>
-          }
-
-
-          <h3>{{ article.title }}</h3>
-          <ul>
-            @for(author of article.authors;track author) {
-            <li>
-              <p>{{ author }}</p>
-            </li>
-            }
-          </ul>
-
-          <small>{{ article.date }}</small>
-
-          @if(article.state === "Published") {
-
-            @if(article.hyperlink === "No disponible") {
-            <small>No disponible</small>
-            }@else{
-            <small
-              ><a [href]="article.hyperlink" target="_blank">Enlace Doi</a></small
-            >
-            }
-          }
-        </div>
+        }@else { @for(group of groupedArticles; track $index) {
+          <div class="year-divider">
+            <span>Artículos del {{ group.year }}</span>
+          </div>
+          <div class="year-cards">
+          
+          @for (article of group.articles; track article.title ) {
+            <div class="card">
+              @switch (article.state) {
+                @case ('escritura'){
+                  <span class="badge writing">{{article.state}}</span>
+                }
+                @case ('Published'){
+                  <span class="badge published">Publicado</span>
+                }
+                @case ('sometido'){
+                  <span class="badge submitted">{{article.state}}</span>
+                }
+                @default{
+                  <span class="badge accepted">{{article.state}}</span>
+                } 
+              }
+    
+              <h3>{{ article.title}}</h3>
+              <ul>
+                @for(author of article.authors;track author) {
+                <li>
+                  <p>{{ author }}</p>
+                </li>
+                }
+              </ul>
+    
+              <small>{{ article.date }}</small>
+    
+              @if(article.state === "Published") {
+    
+                @if(article.hyperlink === "No disponible") {
+                <small>No disponible</small>
+                }@else{
+                <small
+                  ><a [href]="article.hyperlink" target="_blank">Enlace Doi</a></small
+                >
+                }
+              }
+            </div>
+            } 
+            
+          </div>
+        
         } }
       </div>
     </section>

@@ -7,47 +7,70 @@ import { ArticleItem } from '../interfaces/article-item.interface';
 import { ArticlesResponse } from '../interfaces/articles-response.interface';
 import { JwtInterceptor } from '../interceptors/jwt.interceptor';
 import { state } from '@angular/animations';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ArticleService {
   url = environment.API_URL;
+  private _userId: string | undefined;
 
   private articleSubject = new BehaviorSubject<ArticleItem[]>([]);
-  articles$: Observable<ArticleItem[]>;
+  public articles$: Observable<ArticleItem[]> =
+    this.articleSubject.asObservable();
+  public currentArticles = toSignal(this.articles$);
 
   constructor(private _client: HttpClient, private _authService: AuthService) {
-    this.articles$ = this.articleSubject.asObservable();
+    this._authService.currentUser$.subscribe(() => {
+      console.log('User changed:', this._authService.currentUser()?.name);
+      this._userId = this._authService.currentUser()?.email;
+      this.articleSubject.next(this.getArticlesFromLocalStorage());
+    });
   }
 
+  getCurrentArticles(): ArticleItem[] {
+    return this.articleSubject.value;
+  }
   deleteLastArticle(): void {
-    const userId = this._authService.currentUser()?.email;
     const articles = this.getArticlesFromLocalStorage();
     if (articles.length > 0) {
       articles.pop();
-      localStorage.setItem(`articles ${userId}`, JSON.stringify(articles));
+      localStorage.setItem(
+        `articles ${this._userId}`,
+        JSON.stringify(articles)
+      );
       this.articleSubject.next(articles);
     }
   }
 
   createArticle(article: ArticleItem): void {
-    const userId = this._authService.currentUser()?.email;
     const articles = this.getArticlesFromLocalStorage();
     articles.push(article);
-    localStorage.setItem(`articles ${userId}`, JSON.stringify(articles));
+    localStorage.setItem(
+      `articles ${this._userId}`,
+      JSON.stringify(articles)
+    );
     this.articleSubject.next(articles);
   }
 
+  // sortArticlesByDate(articles: ArticleItem[]): ArticleItem[] {
+  //   console.log('Sorting articles by date...');
+  //   articles.sort((a, b) => {
+  //     const yearA = parseInt(a.date.match(/\d{4}/)?.[0] || '0', 10);
+  //     const yearB = parseInt(b.date.match(/\d{4}/)?.[0] || '0', 10);
+  //     return yearB - yearA;
+  //   });
+  //   return articles;
+  // }
+
   setArticlesInLocalStorage(articles: ArticleItem[]): void {
-    const userId = this._authService.currentUser()?.email;
-    localStorage.setItem(`articles ${userId}`, JSON.stringify(articles));
+    localStorage.setItem(`articles ${this._userId}`, JSON.stringify(articles));
     this.articleSubject.next(articles);
   }
 
   getArticlesFromLocalStorage(): ArticleItem[] {
-    const userId = this._authService.currentUser()?.email;
-    const articles = localStorage.getItem(`articles ${userId}`);
+    const articles = localStorage.getItem(`articles ${this._userId}`);
     return articles ? JSON.parse(articles) : [];
   }
 
@@ -64,11 +87,7 @@ export class ArticleService {
       map(
         (response) =>
           ({
-            articles: response.data?.map((article: ArticleItem) => ({
-              ...article,
-              id: Date.now() + (Math.random()*Math.random())*1000,
-              state: 'Published',
-            })),
+            articles: response.data || [],
             message: response.message,
             status: response.statusCode,
           } as ArticlesResponse)
@@ -76,8 +95,7 @@ export class ArticleService {
       tap((response) => {
         this.setArticlesInLocalStorage(response.articles || []);
         console.log('Articles set in local storage');
-        this.articleSubject.next(response.articles || []);
-        // console.table(response.articles || []); 
+        // console.table(response.articles || []);
       }),
 
       catchError((error) =>

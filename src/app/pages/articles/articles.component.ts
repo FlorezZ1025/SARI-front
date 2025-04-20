@@ -14,6 +14,7 @@ import { LoaderService } from '../../services/loader.service';
 import { ModalService } from '../../services/modal.service';
 import { ModalComponent } from '../../components/article-modal/article-modal.component';
 import { ArticleGroup } from '../../interfaces/article-group.interface';
+import { HotToastService } from '@ngneat/hot-toast';
 
 @Component({
   selector: 'app-articles',
@@ -23,7 +24,6 @@ import { ArticleGroup } from '../../interfaces/article-group.interface';
   styleUrl: './articles.component.css',
 })
 export class ArticlesComponent {
-
   user: Signal<User | null | undefined>;
   fullName: string;
   separatedFullName: string;
@@ -32,14 +32,13 @@ export class ArticlesComponent {
   groupedArticles: ArticleGroup[] = [];
   sortedYears: string[] = [];
 
-  private readonly _modalSvc = inject(ModalService)
+  private readonly _modalSvc = inject(ModalService);
+  private _toast = inject(HotToastService);
+  private _authService = inject(AuthService);
+  private _articleService = inject(ArticleService);
+  private _loaderService = inject(LoaderService);
 
-  constructor(
-    public _authService: AuthService,
-    private _articleService: ArticleService,
-    private _router: Router,
-    private _loaderService:LoaderService,
-  ) {
+  constructor(private _router: Router) {
     this.user = this._authService.currentUser;
 
     this.fullName = `${this.user()?.name} ${this.user()?.lastName}` || '';
@@ -55,10 +54,10 @@ export class ArticlesComponent {
     });
   }
 
-  groupArticlesByYear(articles: ArticleItem[]): ArticleGroup[] { 
+  groupArticlesByYear(articles: ArticleItem[]): ArticleGroup[] {
     const map = new Map<string, ArticleItem[]>();
 
-    articles.forEach(item => {
+    articles.forEach((item) => {
       const year = item.date.match(/\d{4}/)?.[0];
       if (year) {
         if (!map.has(year)) {
@@ -67,38 +66,50 @@ export class ArticlesComponent {
         map.get(year)?.push(item);
       }
     });
-  
+
     const groups: ArticleGroup[] = Array.from(map.entries())
       .map(([year, articles]) => ({ year, articles }))
       .sort((a, b) => +b.year - +a.year); // ordena por año descendente
-    
+
     return groups;
-  
   }
 
   createArticle() {
-    this._modalSvc.openModal<ModalComponent, ArticleItem>(ModalComponent)
+    this._modalSvc.openModal<ModalComponent, ArticleItem>(ModalComponent);
   }
 
   formatAuthors(authors: string[]): string {
-    console.log(this.loading$)
     authors = authors.map((author) => author.toLocaleLowerCase().trim());
     const uniqueAuthors = Array.from(new Set(authors));
     return uniqueAuthors.join(', ');
   }
-  deleteLastOne():void{
+  deleteLastOne(): void {
     this._articleService.deleteLastArticle();
   }
-  
+
   extractFromPure(): void {
     console.log('entrando con el nombre: ', this.separatedFullName);
     this._articleService
       .getPureArticles(this.separatedFullName)
       .subscribe((response: any) => {
         if (response.status === 200) {
-          alert(response.message);
-        }else{
-          alert('Error: ' + response.message + ' inténtalo más tarde');
+          this._toast.success('Articulos extraidos correctamente', {
+            style: {
+              background: '#4caf50',
+            },
+          });
+        } else {
+          this._toast.error(
+            + response.message + ' inténtalo más tarde',
+            {
+              style: {
+                color: '#000',
+                padding: '20px',
+                fontSize: '20px',
+                background: '#f44336',
+              },
+            }
+          );
         }
       });
   }

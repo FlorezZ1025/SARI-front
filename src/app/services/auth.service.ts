@@ -14,7 +14,6 @@ import { User } from '../interfaces/user.interface';
 import { environment } from '../../environments/environment';
 import { AuthResponse } from '../interfaces/auth-response.interfacer';
 import { LoginRequest } from '../interfaces/login-request.interface';
-import { LoginResponse } from '../interfaces/login-response.interface';
 import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
@@ -68,7 +67,9 @@ export class AuthService {
     }
   }
 
-  public doLogin(user: LoginRequest): Observable<LoginResponse | AuthResponse> {
+  //Implementar funcion para editar el perfil del usuario
+
+  public doLogin(user: LoginRequest): Observable<AuthResponse> {
     return this._client.post(this.url + '/auth/login', user).pipe(
      
       tap((response: any) => {
@@ -80,7 +81,7 @@ export class AuthService {
             token:response.token,
             message: response.message,
             statusCode: response.statusCode,
-          } as LoginResponse)
+          } as AuthResponse)
       ),
 
       catchError((error) =>

@@ -15,6 +15,8 @@ import { ArticleItem } from '../../interfaces/article-item.interface';
 import { formatDate } from '@angular/common';
 import { ModalService } from '../../services/modal.service';
 import { AuthService } from '../../services/auth.service';
+import { HotToastService } from '@ngneat/hot-toast';
+import { tap } from 'rxjs';
 
 const MATERIAL_MODULES = [
   MatLabel,
@@ -36,6 +38,8 @@ const MATERIAL_MODULES = [
 })
 export class ModalComponent {
   private readonly _modalSvc = inject(ModalService);
+  private _toast = inject(HotToastService);
+
   constructor(
     private cdr: ChangeDetectorRef,
     private _articleService: ArticleService
@@ -95,20 +99,41 @@ export class ModalComponent {
       .split(',')
       .map((author: string) => author.toLocaleLowerCase().trim())
       .filter((author: string) => author !== '');
-    console.log(authors);
-    console.log(authors.unshift(fullName));
-    console.log(typeof authors);
+
     // const uniqueAuthors = Array.from(new Set(authors));
+    authors.push(fullName);
     const article: ArticleItem = {
       title: this.articleForm.value.tittle,
       authors: authors,
       date: this.articleForm.value.date,
       state: this.articleForm.value.state,
-      id: Date.now() + Math.random(),
     };
-    console.log(article);
     article.date = formatDate(article.date, 'yyyy-MM-dd', 'en-US');
-    this._articleService.createArticle(article);
+
+    this._articleService
+      .createArticleInDB(article)
+      .pipe(
+        tap((response) => {
+          if (response.statusCode === 200) {
+            this._toast.success('Artículo creado correctamente', {
+              style: {
+                background: '#4caf50',
+                padding: '20px',
+                fontSize: '20px',
+              },
+            });
+          } else {
+            this._toast.error('Error creando el artículo', {
+              style: {
+                background: '#f44336',
+                padding: '20px',
+                fontSize: '20px',
+              },
+            });
+          }
+        })
+      )
+      .subscribe();
     this.articleForm.reset();
 
     this._modalSvc.closeModal();

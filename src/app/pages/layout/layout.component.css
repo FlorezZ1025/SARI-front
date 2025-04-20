@@ -27,7 +27,7 @@ mat-sidenav {
 }
 
 mat-sidenav, mat-sidenav-content {
-    transition: all 300ms ease-in-out;
+    transition: all 100ms ease-in-out;
   }
 
 .spinner-container {

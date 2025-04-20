@@ -1,37 +1,54 @@
 <div class="sidebar-header">
-  <img [width]="profilePicSize()" [height]="profilePicSize()" src="sari_icon.jpg" alt=""/>
+  <img
+    [width]="profilePicSize()"
+    [height]="profilePicSize()"
+    src="sari_icon.jpg"
+    alt=""
+  />
   <div class="header-text" [class.hide-header-text]="sideNavCollapsed()">
     <h2>SARI</h2>
-      <p>{{this.user()?.name}} {{this.user()?.lastName}}</p>
-    
+    <p>{{ this.user()?.name }} {{ this.user()?.lastName }}</p>
   </div>
 </div>
 <mat-nav-list>
   @for (item of menuItems(); track item.route) {
-    <a mat-list-item 
-      class="menu-item"
-      [routerLink]="item.route"
-      routerLinkActive
-      routerLinkActive="active"
-      >
-      <mat-icon
-      matListItemIcon>{{item.icon}}</mat-icon>
-      @if (!sideNavCollapsed()) {
-        <span matListItemTitle>{{item.label}}</span>
-      }
-    </a>
+  <a
+    mat-list-item
+    class="menu-item"
+    [routerLink]="item.route"
+    routerLinkActive
+    routerLinkActive="active"
+  >
+    <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+    @if (!sideNavCollapsed()) {
+    <span matListItemTitle>{{ item.label }}</span>
+    }
+  </a>
   }
 </mat-nav-list>
-<div class="logout">
-  <button  
+<mat-nav-list class="sidebar-footer" >
+  <a 
+    class="edit-profile"
+    mat-list-item
+    (click)="openProfile()"
+    routerLinkActive
+    routerLinkActive="active">
+    <mat-icon matListItemIcon>account_circle</mat-icon>
+
+  @if (!sideNavCollapsed()) {
+    <span matListItemTitle>Editar perfil</span>
+    }
+  </a>
+  <a
+  mat-list-item
+    class="logout"
     (click)="logout()"
     routerLinkActive
     routerLinkActive="active"
-    >
+  >
     <mat-icon matListItemIcon>logout</mat-icon>
     @if (!sideNavCollapsed()) {
-      <span matListItemTitle>Salir</span>
+    <span matListItemTitle>Salir</span>
     }
-
-  </button>
-</div>
+  </a>
+</mat-nav-list>

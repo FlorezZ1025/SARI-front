@@ -11,6 +11,7 @@ import { AuthService } from '../../../services/auth.service';
 import { User } from '../../../interfaces/user.interface';
 import { tap } from 'rxjs';
 import { CustomValidators } from '../../../../shared/custom-validations';
+import { HotToastService } from '@ngneat/hot-toast';
 
 @Component({
   selector: 'sign-up',
@@ -21,8 +22,8 @@ import { CustomValidators } from '../../../../shared/custom-validations';
 })
 export class SignUpComponent {
   formBuilder = inject(FormBuilder);
-  _authService = inject(AuthService);
-
+  private _authService = inject(AuthService);
+  private _toast = inject(HotToastService);
   user: User = {};
 
   UserRoleOptions = [
@@ -92,12 +93,6 @@ export class SignUpComponent {
   });
 
   constructor(private _router: Router) {
-    // this._authService.token.subscribe((token) => {
-    //   if (token) {
-    //     this._router.navigate(['/']);
-    //   }
-    // });
-
     this.registerForm.valueChanges.subscribe((value) => {
       Object.assign(this.user, value);
     });
@@ -108,9 +103,23 @@ export class SignUpComponent {
       .doRegister(this.user as User)
       .pipe(
         tap((response) => {
-          alert(`${response.message} --- ${response.statusCode}`);
           if (response.statusCode === 201) {
+            this._toast.success('Usuario registrado correctamente', {
+              style: {
+                background: '#4caf50',
+                padding: '20px',
+                fontSize: '20px',
+              },
+            });
             this._router.navigate(['/']);
+          } else {
+            this._toast.error(response.message, {
+              style: {
+                background: '#f44336',
+                padding: '20px',
+                fontSize: '20px',
+              },
+            });
           }
         })
       )

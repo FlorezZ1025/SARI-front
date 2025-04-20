@@ -6,6 +6,7 @@
   --mat-text: #000000;   /*  */
   --mat-rojo-institucional: #B40019; /*  */
   --mat-amarillo-institucional: #FFD400; /*  */
+  --mat-azul-institucional: #181727; /*  */
   --mat-gris-claro: #c5c2c2; /*  */
   --mat-negro-intenso: #1E1E1E; 
   --mat-nav-var: #181727;
@@ -29,7 +30,7 @@ body{
 
 html, body { 
   height: 100%;
-  background: #000000 !important;
+  background: var(--mat-gris-claro);
 
 }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

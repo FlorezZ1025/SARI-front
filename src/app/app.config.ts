@@ -7,6 +7,7 @@ import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { loaderInterceptor } from './interceptors/loader.interceptor';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { provideHotToastConfig } from '@ngneat/hot-toast';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,7 +17,15 @@ export const appConfig: ApplicationConfig = {
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
     {provide: HTTP_INTERCEPTORS, useClass: loaderInterceptor, multi: true},
     provideAnimationsAsync(),
-    provideNativeDateAdapter()
-    
+    provideNativeDateAdapter(),
+    provideHotToastConfig({
+      position: 'bottom-right',
+      duration: 3000,
+      stacking: 'depth',
+      style:{
+        color: '#000',
+        
+      }
+    })
   ]
 };

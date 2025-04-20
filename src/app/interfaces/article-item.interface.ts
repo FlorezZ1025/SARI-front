@@ -1,5 +1,5 @@
 export interface ArticleItem {
-    id?: any;
+    id?: string;
     title: string;
     date: string;
     hyperlink?: string;

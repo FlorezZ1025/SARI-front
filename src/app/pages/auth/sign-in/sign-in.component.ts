@@ -7,8 +7,9 @@ import {
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
-import { User } from '../../../interfaces/user.interface';
 import { LoginRequest } from '../../../interfaces/login-request.interface';
+import { HotToastService } from '@ngneat/hot-toast';
+
 
 @Component({
   selector: 'sign-in',
@@ -19,9 +20,10 @@ import { LoginRequest } from '../../../interfaces/login-request.interface';
 })
 export class SignInComponent {
   formBuilder = inject(FormBuilder);
-  _authService = inject(AuthService);
-  
-  loginRequest:LoginRequest = {}
+  private _authService = inject(AuthService);
+  private _toast = inject(HotToastService);
+
+  loginRequest: LoginRequest = {};
 
   loginForm: FormGroup = this.formBuilder.group({
     email: [
@@ -39,9 +41,9 @@ export class SignInComponent {
   });
 
   constructor(private _router: Router) {
-    if(AuthService.token){
+    if (AuthService.token) {
       this._router.navigate(['/']);
-    };
+    }
 
     this.loginForm.valueChanges.subscribe((value) => {
       Object.assign(this.loginRequest, value);
@@ -50,9 +52,25 @@ export class SignInComponent {
 
   login() {
     this._authService.doLogin(this.loginRequest).subscribe((response) => {
-      alert(response.message);
       if (response.statusCode === 200) {
+        this._toast.success('Bienvenido a SARI', {
+          style:{
+            background: '#4caf50',
+            padding: '20px',
+            fontSize: '20px',
+          }
+        });
         this._router.navigate(['/articles']);
+      } else {
+        this._toast.error(response.message,
+          {
+            style:{
+              background: '#f44336',
+              padding: '20px',
+              fontSize: '20px',
+            }
+          }
+        );
       }
     });
   }

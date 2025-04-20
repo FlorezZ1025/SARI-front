@@ -5,9 +5,8 @@ import { environment } from '../../environments/environment';
 import { BehaviorSubject, catchError, map, Observable, of, tap } from 'rxjs';
 import { ArticleItem } from '../interfaces/article-item.interface';
 import { ArticlesResponse } from '../interfaces/articles-response.interface';
-import { JwtInterceptor } from '../interceptors/jwt.interceptor';
-import { state } from '@angular/animations';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { CreateArticleResponse } from '../interfaces/create-article-response.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -44,38 +43,66 @@ export class ArticleService {
     }
   }
 
-  createArticle(article: ArticleItem): void {
-    const articles = this.getArticlesFromLocalStorage();
-    articles.push(article);
-    localStorage.setItem(
-      `articles ${this._userId}`,
-      JSON.stringify(articles)
-    );
-    this.articleSubject.next(articles);
-  }
-
-  // sortArticlesByDate(articles: ArticleItem[]): ArticleItem[] {
-  //   console.log('Sorting articles by date...');
-  //   articles.sort((a, b) => {
-  //     const yearA = parseInt(a.date.match(/\d{4}/)?.[0] || '0', 10);
-  //     const yearB = parseInt(b.date.match(/\d{4}/)?.[0] || '0', 10);
-  //     return yearB - yearA;
-  //   });
-  //   return articles;
-  // }
-
   setArticlesInLocalStorage(articles: ArticleItem[]): void {
     localStorage.setItem(`articles ${this._userId}`, JSON.stringify(articles));
     this.articleSubject.next(articles);
   }
-
-  getArticlesFromLocalStorage(): ArticleItem[] {
+  
+  private getArticlesFromLocalStorage(): ArticleItem[] {
     const articles = localStorage.getItem(`articles ${this._userId}`);
     return articles ? JSON.parse(articles) : [];
   }
+  
+  public createArticleInLocalStorage(article: ArticleItem): void {
+    const articles = this.getArticlesFromLocalStorage();
+    articles.push(article);
+    localStorage.setItem(`articles ${this._userId}`, JSON.stringify(articles));
+    this.articleSubject.next(articles);
+  }
+
+  public createArticleInDB(article: ArticleItem): Observable<CreateArticleResponse> {
+    const url = `${this.url}/articles/create`;
+    const data = article;
+    // this.createArticleInLocalStorage(article);
+
+    return this._client.post(url, data).pipe(
+
+      map(
+        (response:any) =>
+          ({
+            message: response.message,
+            statusCode: response.statusCode,
+            idArticle: response.idArticle,
+          } as CreateArticleResponse),
+        ),
+        tap((response) => { 
+          const new_article: ArticleItem = {
+            id: response.idArticle,
+            title: article.title,
+            authors: article.authors,
+            date: article.date,
+            state: article.state,
+          };
+          this.createArticleInLocalStorage(new_article);
+          console.log('Article created in local storage');
+        }),
+      catchError((error) =>
+        of(error).pipe(
+          tap((error) => console.error('Error:', error)),
+          map(
+            (error) =>
+              ({
+                message: error.error.message || 'Error al crear el articulo',
+                statusCode: error.status || 500,
+              } as CreateArticleResponse)
+          )
+        )
+      )
+    );
+  }
 
   public getPureArticles(fullSepName: string): Observable<ArticlesResponse> {
-    const url = `${this.url}/indicators/pure_articles`;
+    const url = `${this.url}/articles/pure_articles`;
 
     console.log(fullSepName);
     const data = { fullname: fullSepName };
@@ -95,7 +122,6 @@ export class ArticleService {
       tap((response) => {
         this.setArticlesInLocalStorage(response.articles || []);
         console.log('Articles set in local storage');
-        // console.table(response.articles || []);
       }),
 
       catchError((error) =>

@@ -123,7 +123,7 @@ export class ModalComponent {
               },
             });
           } else {
-            this._toast.error('Error creando el artículo', {
+            this._toast.error(response.message, {
               style: {
                 background: '#f44336',
                 padding: '20px',

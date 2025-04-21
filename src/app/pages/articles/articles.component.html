@@ -46,6 +46,17 @@
                   <span class="badge accepted">{{article.state}}</span>
                 } 
               }
+              @if(article.state !== 'publicado' || article.hyperlink === 'No disponible') {
+
+                <div class="article-item-options">
+                  <button mat-icon-button (click)="editArticle(article)">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button mat-icon-button (click)="deleteArticle(article)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              }
     
               <h3>{{ article.title}}</h3>
               <ul>
@@ -58,7 +69,7 @@
     
               <small>{{ article.date }}</small>
     
-              @if(article.state === "Published") {
+              @if(article.state === "publicado") {
     
                 @if(article.hyperlink === "No disponible") {
                 <small>No disponible</small>

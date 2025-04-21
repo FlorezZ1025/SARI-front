@@ -24,6 +24,7 @@ import { HotToastService } from '@ngneat/hot-toast';
   styleUrl: './articles.component.css',
 })
 export class ArticlesComponent {
+
   user: Signal<User | null | undefined>;
   fullName: string;
   separatedFullName: string;
@@ -113,4 +114,29 @@ export class ArticlesComponent {
         }
       });
   }
+
+  deleteArticle(article:ArticleItem): void {
+    this._articleService.deleteArticle(article.id || '').subscribe((response:any) => {
+      if (response.statusCode === 200) {
+        this._toast.success('Artículo eliminado correctamente', {
+          style: {
+            background: '#4caf50',
+            padding: '20px',
+            fontSize: '20px',
+          },
+        });
+      } else {
+        this._toast.error(response.message, {
+          style: {
+            background: '#f44336',
+            padding: '20px',
+            fontSize: '20px',
+          },
+        });
+      }
+    })
+  }
+    editArticle(_t31: ArticleItem) {
+    
+    }
 }

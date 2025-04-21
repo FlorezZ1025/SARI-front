@@ -111,6 +111,15 @@
 .accepted {
     background-color: #ff9800;
 }
+
+.article-item-options{
+    position: absolute;
+    bottom: 1px;
+    right: 5px;
+    display: flex;
+    gap: 0;
+}
+
 .card h3 {
     margin-top: 25px;
     color: #060606;
@@ -128,6 +137,7 @@
 
 .card small {
     margin-top: 5px;
+    margin-bottom: 20px;
     color: #36383a;
     word-wrap: break-word;
     font-size: 8px;
@@ -149,6 +159,9 @@
     font-weight: bold;
     margin-top: 20px;
 }
+
+
+
 .spinner-container {
     display: flex;
     flex-direction: column;

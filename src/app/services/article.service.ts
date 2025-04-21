@@ -43,16 +43,53 @@ export class ArticleService {
     }
   }
 
+  public deleteArticle(id: string): Observable<any> {
+    const url = `${this.url}/articles/delete`;
+    const data = { id: id };
+    return this._client.post(url, data).pipe(
+      tap((response: any) => {
+        console.log('Response:', response);
+      }),
+      map(
+        (response) =>
+          ({
+            message: response.message,
+            statusCode: response.statusCode,
+          } as ArticlesResponse)
+      ),
+      tap(() => {
+        const articles = this.getArticlesFromLocalStorage();
+        const filteredArticles = articles.filter(
+          (article) => article.id !== id
+        );
+        this.setArticlesInLocalStorage(filteredArticles);
+        console.log('Article deleted in local storage');
+      }),
+      catchError((error) =>
+        of(error).pipe(
+          tap((error) => console.error('Error:', error)),
+          map(
+            (error) =>
+              ({
+                message: error.error.message || 'Error al eliminar el articulo',
+                statusCode: error.status || 500,
+              } as ArticlesResponse)
+          )
+        )
+      )
+    );
+  }
+
   setArticlesInLocalStorage(articles: ArticleItem[]): void {
     localStorage.setItem(`articles ${this._userId}`, JSON.stringify(articles));
     this.articleSubject.next(articles);
   }
-  
+
   private getArticlesFromLocalStorage(): ArticleItem[] {
     const articles = localStorage.getItem(`articles ${this._userId}`);
     return articles ? JSON.parse(articles) : [];
   }
-  
+
   public createArticleInLocalStorage(article: ArticleItem): void {
     const articles = this.getArticlesFromLocalStorage();
     articles.push(article);
@@ -60,32 +97,33 @@ export class ArticleService {
     this.articleSubject.next(articles);
   }
 
-  public createArticleInDB(article: ArticleItem): Observable<CreateArticleResponse> {
+  public createArticleInDB(
+    article: ArticleItem
+  ): Observable<CreateArticleResponse> {
     const url = `${this.url}/articles/create`;
     const data = article;
     // this.createArticleInLocalStorage(article);
 
     return this._client.post(url, data).pipe(
-
       map(
-        (response:any) =>
+        (response: any) =>
           ({
             message: response.message,
             statusCode: response.statusCode,
             idArticle: response.idArticle,
-          } as CreateArticleResponse),
-        ),
-        tap((response) => { 
-          const new_article: ArticleItem = {
-            id: response.idArticle,
-            title: article.title,
-            authors: article.authors,
-            date: article.date,
-            state: article.state,
-          };
-          this.createArticleInLocalStorage(new_article);
-          console.log('Article created in local storage');
-        }),
+          } as CreateArticleResponse)
+      ),
+      tap((response) => {
+        const new_article: ArticleItem = {
+          id: response.idArticle,
+          title: article.title,
+          authors: article.authors,
+          date: article.date,
+          state: article.state,
+        };
+        this.createArticleInLocalStorage(new_article);
+        console.log('Article created in local storage');
+      }),
       catchError((error) =>
         of(error).pipe(
           tap((error) => console.error('Error:', error)),
@@ -116,7 +154,7 @@ export class ArticleService {
           ({
             articles: response.data || [],
             message: response.message,
-            status: response.statusCode,
+            statusCode: response.statusCode,
           } as ArticlesResponse)
       ),
       tap((response) => {
@@ -132,7 +170,7 @@ export class ArticleService {
               ({
                 message:
                   error.error.message || 'Error al obtener los articulos',
-                status: error.status || 500,
+                statusCode: error.status || 500,
               } as ArticlesResponse)
           )
         )

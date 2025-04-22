@@ -7,6 +7,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { ModalService } from '../../services/modal.service';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../interfaces/user.interface';
+import { tap } from 'rxjs';
+import { HotToastService } from '@ngneat/hot-toast';
 
 const MATERIAL_MODULES = [
   MatLabel,
@@ -29,11 +31,15 @@ export class EditProfileModalComponent {
 
   private readonly _modalSvc = inject(ModalService);
   private readonly _authService = inject(AuthService);
+  private _toast = inject(HotToastService);
+  private cdr = inject(ChangeDetectorRef);
 
-  user:User|null|undefined = this._authService.currentUser();
-  constructor(
-    private cdr: ChangeDetectorRef,
-  ){
+  user = this._authService.currentUser();
+  editInfo = {}
+  constructor(){
+    this.userInfoForm.valueChanges.subscribe((value) => {
+      Object.assign(this.editInfo, value);
+    });
   }
 
   ngAfterViewInit() {
@@ -72,10 +78,34 @@ export class EditProfileModalComponent {
         ],
       }
     ],
-    // password: [''],
   });
 
   onSubmit() {
+
+    this._authService.updateUserInfo(this.editInfo as User).pipe(
+      tap((response:any) => {
+        if (response.statusCode === 200) {
+          this._toast.success('Información actualizada correctamente', {
+            style:{
+              background: '#4caf50',
+              padding: '20px',
+              fontSize: '20px',
+            }
+          });
+        } else {
+          this._toast.error(response.message,
+            {
+              style:{
+                background: '#f44336',
+                padding: '20px',
+                fontSize: '20px',
+              }
+            }
+          );
+        }
+      })
+    ).subscribe()
+
 
     this._modalSvc.closeModal();
     }

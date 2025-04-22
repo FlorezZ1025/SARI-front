@@ -9,7 +9,6 @@
         <div class="article-options">
           <button mat-fab (click)="createArticle()">Agregrar artículo</button>
           <button mat-fab (click)="extractFromPure()">Importar de PURE</button>
-          <!-- <button mat-fab (click)="deleteLastOne()">Eliminar el último</button> -->
         </div>
       </div>
       <div class="all-cards">
@@ -46,17 +45,23 @@
                   <span class="badge accepted">{{article.state}}</span>
                 } 
               }
-              @if(article.state !== 'publicado' || article.hyperlink === 'No disponible') {
-
-                <div class="article-item-options">
+              <div class="article-item-options">
+                @if(article.hyperlink === 'No disponible' && article.state === 'publicado') {
+                
+                  <button mat-icon-button (click)="editArticle(article)">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  
+                }
+                @else if(article.state !== 'publicado'){
                   <button mat-icon-button (click)="editArticle(article)">
                     <mat-icon>edit</mat-icon>
                   </button>
                   <button mat-icon-button (click)="deleteArticle(article)">
                     <mat-icon>delete</mat-icon>
                   </button>
+                }
                 </div>
-              }
     
               <h3>{{ article.title}}</h3>
               <ul>

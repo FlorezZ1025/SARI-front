@@ -23,7 +23,8 @@ export class ArticleService {
   constructor(private _client: HttpClient, private _authService: AuthService) {
     this._authService.currentUser$.subscribe(() => {
       console.log('User changed:', this._authService.currentUser()?.name);
-      this._userId = this._authService.currentUser()?.email;
+      console.log('User changed:', this._authService.currentUser()?.email);
+      this._userId = this._authService.currentUser()?.id;
       this.articleSubject.next(this.getArticlesFromLocalStorage());
     });
   }
@@ -43,15 +44,12 @@ export class ArticleService {
     }
   }
 
-  public deleteArticle(id: string): Observable<any> {
+  public deleteArticle(id: string): Observable<ArticlesResponse> {
     const url = `${this.url}/articles/delete`;
     const data = { id: id };
     return this._client.post(url, data).pipe(
-      tap((response: any) => {
-        console.log('Response:', response);
-      }),
       map(
-        (response) =>
+        (response: any) =>
           ({
             message: response.message,
             statusCode: response.statusCode,
@@ -67,7 +65,6 @@ export class ArticleService {
       }),
       catchError((error) =>
         of(error).pipe(
-          tap((error) => console.error('Error:', error)),
           map(
             (error) =>
               ({
@@ -80,7 +77,51 @@ export class ArticleService {
     );
   }
 
-  setArticlesInLocalStorage(articles: ArticleItem[]): void {
+  public editArticle(article: ArticleItem): Observable<ArticlesResponse> {
+    const url = `${this.url}/articles/update`;
+    const data = article;
+    return this._client.post(url, data).pipe(
+      tap((response: any) => {
+        console.log('Response:', response);
+      }),
+      map(
+        (response) =>
+          ({
+            message: response.message,
+            statusCode: response.statusCode,
+          } as ArticlesResponse)
+      ),
+      tap(() => {
+        const articles = this.getArticlesFromLocalStorage();
+        articles.map((art) => {
+          if (art.id === article.id) {
+            art.title = article.title;
+            art.authors = article.authors;
+            art.date = article.date;
+            art.state = article.state;
+          }
+          return art;
+        });
+
+        this.setArticlesInLocalStorage(articles);
+        console.log('Article edited in local storage');
+      }),
+      catchError((error) =>
+        of(error).pipe(
+          tap((error) => console.error('Error:', error)),
+          map(
+            (error) =>
+              ({
+                message: error.error.message || 'Error al editar el articulo',
+                statusCode: error.status || 500,
+              } as ArticlesResponse)
+          )
+        )
+      )
+    );
+  }
+
+  private setArticlesInLocalStorage(articles: ArticleItem[]): void {
     localStorage.setItem(`articles ${this._userId}`, JSON.stringify(articles));
     this.articleSubject.next(articles);
   }
@@ -97,12 +138,11 @@ export class ArticleService {
     this.articleSubject.next(articles);
   }
 
-  public createArticleInDB(
+  public createArticle(
     article: ArticleItem
   ): Observable<CreateArticleResponse> {
     const url = `${this.url}/articles/create`;
     const data = article;
-    // this.createArticleInLocalStorage(article);
 
     return this._client.post(url, data).pipe(
       map(
@@ -146,11 +186,8 @@ export class ArticleService {
     const data = { fullname: fullSepName };
 
     return this._client.post(url, data).pipe(
-      tap((response: any) => {
-        console.log('Response:', response);
-      }),
       map(
-        (response) =>
+        (response: any) =>
           ({
             articles: response.data || [],
             message: response.message,
@@ -158,7 +195,25 @@ export class ArticleService {
           } as ArticlesResponse)
       ),
       tap((response) => {
-        this.setArticlesInLocalStorage(response.articles || []);
+        const articles = this.getArticlesFromLocalStorage();
+        const pureArticles = response.articles || [];
+        if (articles.length === 0) {
+          this.setArticlesInLocalStorage(pureArticles);
+          console.log('Articles set in local storage_first time');
+          return;
+        }
+        articles.map((art) => {
+          pureArticles.map((pureArt) => {
+            if (art.id === pureArt.id) {
+              art.title = pureArt.title;
+              art.authors = pureArt.authors;
+              art.date = pureArt.date;
+              art.state = pureArt.state;
+            }
+          });
+          return art;
+        });
+        this.setArticlesInLocalStorage(articles);
         console.log('Articles set in local storage');
       }),
 

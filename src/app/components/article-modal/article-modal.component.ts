@@ -39,20 +39,19 @@ const MATERIAL_MODULES = [
 export class ModalComponent {
   private readonly _modalSvc = inject(ModalService);
   private _toast = inject(HotToastService);
+  private _authService = inject(AuthService);
+  private cdr = inject(ChangeDetectorRef);	
+  private _articleService = inject(ArticleService);
+
+  newArticleFormBuilder = inject(FormBuilder);
 
   constructor(
-    private cdr: ChangeDetectorRef,
-    private _articleService: ArticleService
   ) {}
 
   ngAfterViewInit() {
-    // console.log('ModalComponent ngAfterViewInit');
     this.cdr.detectChanges();
   }
 
-  _authService = inject(AuthService);
-
-  newArticleFormBuilder = inject(FormBuilder);
   articleForm: FormGroup = this.newArticleFormBuilder.group({
     tittle: [
       '',
@@ -71,6 +70,7 @@ export class ModalComponent {
           Validators.maxLength(100),
           Validators.pattern('^[A-Za-zÁÉÍÓÚÜáéíóúüñÑ\\s\\,]+$'),
           Validators.minLength(5),
+
         ],
       },
     ],
@@ -100,7 +100,6 @@ export class ModalComponent {
       .map((author: string) => author.toLocaleLowerCase().trim())
       .filter((author: string) => author !== '');
 
-    // const uniqueAuthors = Array.from(new Set(authors));
     authors.push(fullName);
     const article: ArticleItem = {
       title: this.articleForm.value.tittle,
@@ -111,7 +110,7 @@ export class ModalComponent {
     article.date = formatDate(article.date, 'yyyy-MM-dd', 'en-US');
 
     this._articleService
-      .createArticleInDB(article)
+      .createArticle(article)
       .pipe(
         tap((response) => {
           if (response.statusCode === 200) {

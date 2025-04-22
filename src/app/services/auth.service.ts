@@ -124,4 +124,33 @@ export class AuthService {
         )
       );
   }
+
+  public updateUserInfo(userInfo:User): Observable<AuthResponse> {
+    const url = `${this.url}/auth/update`;
+    return this._client.post(url, userInfo).pipe(
+      tap((response: any) => {
+        this.setSession(response.token);
+      }),
+      map(
+        (response) =>
+          ({
+            token: response.token,
+            message: response.message,
+            statusCode: response.statusCode,
+          } as AuthResponse)
+      ),
+      catchError((error) =>
+        of(error).pipe(
+          tap((error) => console.log(error.error)),
+          map(
+            (error) =>
+              ({
+                message: error.error.message,
+                statusCode: error.status,
+              } as AuthResponse)
+          )
+        )
+      )
+    );
+  }
 }

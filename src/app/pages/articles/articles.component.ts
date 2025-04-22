@@ -15,6 +15,7 @@ import { ModalService } from '../../services/modal.service';
 import { ModalComponent } from '../../components/article-modal/article-modal.component';
 import { ArticleGroup } from '../../interfaces/article-group.interface';
 import { HotToastService } from '@ngneat/hot-toast';
+import { EditArticleModalComponent } from '../../components/edit-article-modal/edit-article-modal.component';
 
 @Component({
   selector: 'app-articles',
@@ -93,7 +94,7 @@ export class ArticlesComponent {
     this._articleService
       .getPureArticles(this.separatedFullName)
       .subscribe((response: any) => {
-        if (response.status === 200) {
+        if (response.statusCode === 200) {
           this._toast.success('Articulos extraidos correctamente', {
             style: {
               background: '#4caf50',
@@ -101,7 +102,7 @@ export class ArticlesComponent {
           });
         } else {
           this._toast.error(
-            + response.message + ' inténtalo más tarde',
+            'Error extrayendo' + ' inténtalo más tarde',
             {
               style: {
                 color: '#000',
@@ -136,7 +137,7 @@ export class ArticlesComponent {
       }
     })
   }
-    editArticle(_t31: ArticleItem) {
-    
+    editArticle(article: ArticleItem) {
+      this._modalSvc.openModal<EditArticleModalComponent, ArticleItem>(EditArticleModalComponent, article)
     }
 }

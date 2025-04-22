@@ -24,7 +24,7 @@ export class SignUpComponent {
   formBuilder = inject(FormBuilder);
   private _authService = inject(AuthService);
   private _toast = inject(HotToastService);
-  user: User = {};
+  user = {};
 
   UserRoleOptions = [
     { value: 'researcher', label: 'Investigador' },

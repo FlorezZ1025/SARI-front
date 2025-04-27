@@ -1,12 +1,8 @@
-import { Component, inject, Signal } from '@angular/core';
+import { Component, inject, OnInit, Signal } from '@angular/core';
 import { User } from '../../interfaces/user.interface';
-import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 import { ArticleService } from '../../services/article.service';
 import { ArticleItem } from '../../interfaces/article-item.interface';
-import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { AsyncPipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIcon } from '@angular/material/icon';
@@ -16,20 +12,21 @@ import { ModalComponent } from '../../components/article-modal/article-modal.com
 import { ArticleGroup } from '../../interfaces/article-group.interface';
 import { HotToastService } from '@ngneat/hot-toast';
 import { EditArticleModalComponent } from '../../components/edit-article-modal/edit-article-modal.component';
+import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-articles',
   standalone: true,
-  imports: [MatButtonModule, MatProgressSpinnerModule, MatIcon, AsyncPipe],
+  imports: [MatButtonModule, MatProgressSpinnerModule, MatIcon],
   templateUrl: './articles.component.html',
   styleUrl: './articles.component.css',
 })
-export class ArticlesComponent {
+export class ArticlesComponent implements OnInit {
 
   user: Signal<User | null | undefined>;
   fullName: string;
   separatedFullName: string;
-  loading$: any;
+  loading$: Boolean = false;
   articles: ArticleItem[] = [];
   groupedArticles: ArticleGroup[] = [];
   sortedYears: string[] = [];
@@ -40,7 +37,7 @@ export class ArticlesComponent {
   private _articleService = inject(ArticleService);
   private _loaderService = inject(LoaderService);
 
-  constructor(private _router: Router) {
+  constructor() {
     this.user = this._authService.currentUser;
 
     this.fullName = `${this.user()?.name} ${this.user()?.lastName}` || '';
@@ -55,7 +52,26 @@ export class ArticlesComponent {
       this.loading$ = loading;
     });
   }
-
+  ngOnInit(): void {
+    this._articleService.loadArticlesOnStart().subscribe(() => {
+      this._toast.success('Artículos cargados correctamente', {
+        style: {
+          border: '2px solid #4caf50',
+          padding: '20px',
+          fontSize: '20px',
+        },
+      });
+      (error:any) => {
+        this._toast.error('Error cargando artículos', {
+          style: {
+            border: '2px solid #f44336',
+            padding: '20px',
+            fontSize: '20px',
+          },
+        });
+      };
+    }, 
+  )}
   groupArticlesByYear(articles: ArticleItem[]): ArticleGroup[] {
     const map = new Map<string, ArticleItem[]>();
 
@@ -89,7 +105,7 @@ export class ArticlesComponent {
     this._articleService.deleteLastArticle();
   }
 
-  extractFromPure(): void {
+  extractArticleFromPure(): void {
     console.log('entrando con el nombre: ', this.separatedFullName);
     this._articleService
       .getPureArticles(this.separatedFullName)
@@ -97,7 +113,10 @@ export class ArticlesComponent {
         if (response.statusCode === 200) {
           this._toast.success('Articulos extraidos correctamente', {
             style: {
-              background: '#4caf50',
+              border: '2px solid #4caf50',
+              padding: '20px',
+              fontSize: '20px',
+
             },
           });
         } else {
@@ -105,10 +124,9 @@ export class ArticlesComponent {
             'Error extrayendo' + ' inténtalo más tarde',
             {
               style: {
-                color: '#000',
+                border: '2px solid #f44336',
                 padding: '20px',
                 fontSize: '20px',
-                background: '#f44336',
               },
             }
           );
@@ -121,7 +139,7 @@ export class ArticlesComponent {
       if (response.statusCode === 200) {
         this._toast.success('Artículo eliminado correctamente', {
           style: {
-            background: '#4caf50',
+            border: '2px solid #4caf50',
             padding: '20px',
             fontSize: '20px',
           },
@@ -129,7 +147,7 @@ export class ArticlesComponent {
       } else {
         this._toast.error(response.message, {
           style: {
-            background: '#f44336',
+            border: '2px solid #f44336',
             padding: '20px',
             fontSize: '20px',
           },

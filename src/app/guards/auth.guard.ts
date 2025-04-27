@@ -19,8 +19,6 @@ export const authGuard: CanActivateFn = (route, state) => {
     router.navigate(['/sign-in']);
     return false;
   }
-  authService.setUser(authService.decodeToken(AuthService.token));
-  
-  console.log('usuario ' + authService.currentUser()?.name + ' autorizado');
+  authService.setUser(authService.decodeToken(AuthService.token));  
   return true;
 };

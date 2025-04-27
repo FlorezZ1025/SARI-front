@@ -99,18 +99,20 @@ export class EditArticleModalComponent {
           if (response.statusCode === 200) {
             this._toast.success(response.message, {
               style: {
-                background: '#4caf50',
                 padding: '20px',
                 fontSize: '20px',
+              border: '2px solid #4caf50',
+
               },
             });
             this._modalSvc.closeModal();
           } else {
             this._toast.error(response.message, {
               style: {
-                background: '#f44336',
                 padding: '20px',
                 fontSize: '20px',
+              border: '2px solid #f44336',
+
               },
             });
           }

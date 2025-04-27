@@ -3,8 +3,6 @@ import { SignInComponent } from './pages/auth/sign-in/sign-in.component';
 import { SignUpComponent } from './pages/auth/sign-up/sign-up.component';
 import { HomeComponent } from './pages/home/home.component';
 import { authGuard } from './guards/auth.guard';
-import { ArticlesComponent } from './pages/articles/articles.component';
-import { ProjectsComponent } from './pages/proyects/projects.component';
 import { ThesisComponent } from './pages/thesis/thesis.component';
 import { LayoutComponent } from './pages/layout/layout.component';
 
@@ -15,7 +13,7 @@ export const routes: Routes = [
     },
     {
         path: 'sign-up',
-        component: SignUpComponent
+        loadComponent: () => import('./pages/auth/sign-up/sign-up.component').then(m => m.SignUpComponent),
     },
     {
         path: '',
@@ -34,11 +32,11 @@ export const routes: Routes = [
             },
             {
                 path: 'projects',
-                component: ProjectsComponent,
+                loadComponent: () => import('./pages/projects/projects.component').then(m => m.ProjectsComponent),
             },
             {
                 path: 'thesis',
-                component: ThesisComponent,
+                loadComponent: () => import('./pages/thesis/thesis.component').then(m => m.ThesisComponent),
             }
         ]
     },

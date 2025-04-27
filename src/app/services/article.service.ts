@@ -2,7 +2,17 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import { environment } from '../../environments/environment';
-import { BehaviorSubject, catchError, map, Observable, of, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  catchError,
+  first,
+  firstValueFrom,
+  map,
+  Observable,
+  of,
+  tap,
+  timeout,
+} from 'rxjs';
 import { ArticleItem } from '../interfaces/article-item.interface';
 import { ArticlesResponse } from '../interfaces/articles-response.interface';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -23,9 +33,7 @@ export class ArticleService {
   constructor(private _client: HttpClient, private _authService: AuthService) {
     this._authService.currentUser$.subscribe(() => {
       console.log('User changed:', this._authService.currentUser()?.name);
-      console.log('User changed:', this._authService.currentUser()?.email);
       this._userId = this._authService.currentUser()?.id;
-      this.articleSubject.next(this.getArticlesFromLocalStorage());
     });
   }
 
@@ -121,6 +129,32 @@ export class ArticleService {
     );
   }
 
+  public loadArticlesOnStart() {
+    const actualArticles = this.getArticlesFromLocalStorage();
+    if(actualArticles.length > 0){
+      console.log('Articles loaded from local storage:', actualArticles);
+      this.articleSubject.next(actualArticles);
+      return of(actualArticles);
+    }else{
+      console.log('No articles in local storage, loading from DB...');
+      return this.getArticlesFromDB()
+    }
+  }
+
+  public getArticlesFromDB(): Observable<ArticleItem[]> {
+    const url = `${this.url}/articles/get_all`;
+    return this._client.get(url).pipe(
+      map((response: any) => {
+        const articles = response.data || [];
+        this.setArticlesInLocalStorage(articles);
+        return articles;
+      }),
+      catchError((error) =>
+        of(error)
+      )
+    );
+  }
+
   private setArticlesInLocalStorage(articles: ArticleItem[]): void {
     localStorage.setItem(`articles ${this._userId}`, JSON.stringify(articles));
     this.articleSubject.next(articles);
@@ -195,6 +229,7 @@ export class ArticleService {
           } as ArticlesResponse)
       ),
       tap((response) => {
+        console.log('artículos de Pure:', response.articles);
         const articles = this.getArticlesFromLocalStorage();
         const pureArticles = response.articles || [];
         if (articles.length === 0) {
@@ -202,16 +237,13 @@ export class ArticleService {
           console.log('Articles set in local storage_first time');
           return;
         }
-        articles.map((art) => {
-          pureArticles.map((pureArt) => {
-            if (art.id === pureArt.id) {
-              art.title = pureArt.title;
-              art.authors = pureArt.authors;
-              art.date = pureArt.date;
-              art.state = pureArt.state;
-            }
-          });
-          return art;
+        const titleArticleList = articles.map((art) => art.id);
+        console.log('titleArticleList', titleArticleList);
+        pureArticles.forEach((pureArt) => {
+          console.log('pureArt.tittle', pureArt.title);
+          if (!titleArticleList.includes(pureArt.id)) {
+            console.log(!titleArticleList.includes(pureArt.id));
+          }
         });
         this.setArticlesInLocalStorage(articles);
         console.log('Articles set in local storage');

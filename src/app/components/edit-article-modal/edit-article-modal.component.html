@@ -2,10 +2,10 @@
     <h1>Editando artículo</h1>
   </div>
   <form action="" [formGroup]="editArticleForm" (ngSubmit)="onSubmit()">
-    <div mat-dialog-content class="content">
+    @if(article.state === 'publicado') {
       <div class="row">
         <mat-form-field class="full-width" appearence="outline">
-          <mat-label>Nombre nuevo</mat-label>
+          <mat-label>Adjuntar PDF</mat-label>
           <input
             matInput
             placeholder="Ingresa un nuevo nombre"
@@ -14,39 +14,53 @@
           />
         </mat-form-field>
       </div>
-      <div class="row">
-        <mat-form-field class="full-width" appearence="outline">
-          <mat-label>Otros autores</mat-label>
-          <input
-            matInput
-            placeholder="No tiene que digitar su nombre"
-            formControlName="authors"
-          />
-        </mat-form-field>
+    }@else {
+      <div mat-dialog-content class="content">
+        <div class="row">
+          <mat-form-field class="full-width" appearence="outline">
+            <mat-label>Nombre nuevo</mat-label>
+            <input
+              matInput
+              placeholder="Ingresa un nuevo nombre"
+              formControlName="title"
+              required
+            />
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <mat-form-field class="full-width" appearence="outline">
+            <mat-label>Otros autores</mat-label>
+            <input
+              matInput
+              placeholder="No tiene que digitar su nombre"
+              formControlName="authors"
+            />
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <mat-form-field class="full-width" appearance="fill">
+            <mat-label>Estado del artículo</mat-label>
+            <mat-select formControlName="state" required>
+              <mat-option value="escritura">Escritura</mat-option>
+              <mat-option value="sometido">Sometido</mat-option>
+              <mat-option value="aceptado">Aceptado</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field class="full-width" appearence="outline">
+            <mat-label>Fecha de inicio del artículo</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="date"/>
+            <mat-hint>MM/DD/YYYY</mat-hint>
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
       </div>
-      <div class="row">
-        <mat-form-field class="full-width" appearance="fill">
-          <mat-label>Estado del artículo</mat-label>
-          <mat-select formControlName="state" required>
-            <mat-option value="escritura">Escritura</mat-option>
-            <mat-option value="sometido">Sometido</mat-option>
-            <mat-option value="aceptado">Aceptado</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-      <div>
-        <mat-form-field class="full-width" appearence="outline">
-          <mat-label>Fecha de inicio del artículo</mat-label>
-          <input matInput [matDatepicker]="picker" formControlName="date"/>
-          <mat-hint>MM/DD/YYYY</mat-hint>
-          <mat-datepicker-toggle
-            matIconSuffix
-            [for]="picker"
-          ></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
-      </div>
-    </div>
+    }
       <div mat-dialog-actions class="dialog-actions">
           <button mat-button color="primary" [disabled]="this.editArticleForm.invalid" type="submit">Editar</button>
       </div>

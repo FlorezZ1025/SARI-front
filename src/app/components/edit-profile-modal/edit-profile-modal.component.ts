@@ -38,6 +38,7 @@ export class EditProfileModalComponent {
   editInfo = {}
   constructor(){
     this.userInfoForm.valueChanges.subscribe((value) => {
+      console.log(this.userInfoForm);
       Object.assign(this.editInfo, value);
     });
   }
@@ -82,23 +83,30 @@ export class EditProfileModalComponent {
 
   onSubmit() {
 
-    this._authService.updateUserInfo(this.editInfo as User).pipe(
+    const user:User = {
+      id: this.user?.id,
+      name: this.userInfoForm.value.name?.toLocaleLowerCase() || '',
+      lastName: this.userInfoForm.value.lastName?.toLocaleLowerCase() || '',
+      email: this.userInfoForm.value.email?.toLowerCase() || '',
+    }
+    this._authService.updateUserInfo(user).pipe(
       tap((response:any) => {
         if (response.statusCode === 200) {
           this._toast.success('Información actualizada correctamente', {
             style:{
-              background: '#4caf50',
               padding: '20px',
               fontSize: '20px',
+              border: '2px solid #4caf50',
             }
           });
         } else {
           this._toast.error(response.message,
             {
               style:{
-                background: '#f44336',
                 padding: '20px',
                 fontSize: '20px',
+              border: '2px solid #f44336',
+
               }
             }
           );

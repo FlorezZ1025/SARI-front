@@ -106,7 +106,7 @@ export class SignUpComponent {
           if (response.statusCode === 201) {
             this._toast.success('Usuario registrado correctamente', {
               style: {
-                background: '#4caf50',
+                border: '2px solid #4CAF50',
                 padding: '20px',
                 fontSize: '20px',
               },
@@ -115,7 +115,7 @@ export class SignUpComponent {
           } else {
             this._toast.error(response.message, {
               style: {
-                background: '#f44336',
+                border: '2px solid #f44336',
                 padding: '20px',
                 fontSize: '20px',
               },

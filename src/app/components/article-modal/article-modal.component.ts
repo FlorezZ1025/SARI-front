@@ -116,7 +116,7 @@ export class ModalComponent {
           if (response.statusCode === 200) {
             this._toast.success('Artículo creado correctamente', {
               style: {
-                background: '#4caf50',
+                border: '2px solid #4caf50',
                 padding: '20px',
                 fontSize: '20px',
               },
@@ -124,7 +124,7 @@ export class ModalComponent {
           } else {
             this._toast.error(response.message, {
               style: {
-                background: '#f44336',
+                border: '2px solid #f44336',
                 padding: '20px',
                 fontSize: '20px',
               },

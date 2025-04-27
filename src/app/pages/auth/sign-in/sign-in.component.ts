@@ -55,7 +55,7 @@ export class SignInComponent {
       if (response.statusCode === 200) {
         this._toast.success('Bienvenido a SARI', {
           style:{
-            background: '#4caf50',
+            border: '2px solid #4CAF50',
             padding: '20px',
             fontSize: '20px',
           }
@@ -65,7 +65,7 @@ export class SignInComponent {
         this._toast.error(response.message,
           {
             style:{
-              background: '#f44336',
+              border: '2px solid #F44336',
               padding: '20px',
               fontSize: '20px',
             }

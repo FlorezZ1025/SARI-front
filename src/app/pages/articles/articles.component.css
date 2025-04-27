@@ -58,11 +58,14 @@
 
 .all-cards {
     display: flex;
+    align-items: center;
+    justify-content: center;
     flex-direction: column;
 }
 .year-cards{
     display: flex;
     /* grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); */
+    justify-content: left;
     flex-wrap: wrap;
     gap: 10px;
     /* align-items: stretch; */

@@ -22,7 +22,6 @@ import { tap } from 'rxjs';
   styleUrl: './articles.component.css',
 })
 export class ArticlesComponent implements OnInit {
-
   user: Signal<User | null | undefined>;
   fullName: string;
   separatedFullName: string;
@@ -53,25 +52,27 @@ export class ArticlesComponent implements OnInit {
     });
   }
   ngOnInit(): void {
-    this._articleService.loadArticlesOnStart().subscribe(() => {
-      this._toast.success('Artículos cargados correctamente', {
-        style: {
-          border: '2px solid #4caf50',
-          padding: '20px',
-          fontSize: '20px',
-        },
-      });
-      (error:any) => {
-        this._toast.error('Error cargando artículos', {
+    if (this._articleService.getCurrentArticles().length === 0) {
+      this._articleService.loadArticlesOnStart().subscribe(() => {
+        this._toast.success('Artículos cargados correctamente', {
           style: {
-            border: '2px solid #f44336',
+            border: '2px solid #4caf50',
             padding: '20px',
             fontSize: '20px',
           },
         });
-      };
-    }, 
-  )}
+        (error: any) => {
+          this._toast.error('Error cargando artículos', {
+            style: {
+              border: '2px solid #f44336',
+              padding: '20px',
+              fontSize: '20px',
+            },
+          });
+        };
+      });
+    }
+  }
   groupArticlesByYear(articles: ArticleItem[]): ArticleGroup[] {
     const map = new Map<string, ArticleItem[]>();
 
@@ -101,9 +102,7 @@ export class ArticlesComponent implements OnInit {
     const uniqueAuthors = Array.from(new Set(authors));
     return uniqueAuthors.join(', ');
   }
-  deleteLastOne(): void {
-    this._articleService.deleteLastArticle();
-  }
+  
 
   extractArticleFromPure(): void {
     console.log('entrando con el nombre: ', this.separatedFullName);
@@ -116,46 +115,47 @@ export class ArticlesComponent implements OnInit {
               border: '2px solid #4caf50',
               padding: '20px',
               fontSize: '20px',
-
             },
           });
         } else {
-          this._toast.error(
-            'Error extrayendo' + ' inténtalo más tarde',
-            {
-              style: {
-                border: '2px solid #f44336',
-                padding: '20px',
-                fontSize: '20px',
-              },
-            }
-          );
+          this._toast.error('Error extrayendo' + ' inténtalo más tarde', {
+            style: {
+              border: '2px solid #f44336',
+              padding: '20px',
+              fontSize: '20px',
+            },
+          });
         }
       });
   }
 
-  deleteArticle(article:ArticleItem): void {
-    this._articleService.deleteArticle(article.id || '').subscribe((response:any) => {
-      if (response.statusCode === 200) {
-        this._toast.success('Artículo eliminado correctamente', {
-          style: {
-            border: '2px solid #4caf50',
-            padding: '20px',
-            fontSize: '20px',
-          },
-        });
-      } else {
-        this._toast.error(response.message, {
-          style: {
-            border: '2px solid #f44336',
-            padding: '20px',
-            fontSize: '20px',
-          },
-        });
-      }
-    })
+  deleteArticle(article: ArticleItem): void {
+    this._articleService
+      .deleteArticle(article.id || '')
+      .subscribe((response: any) => {
+        if (response.statusCode === 200) {
+          this._toast.success('Artículo eliminado correctamente', {
+            style: {
+              border: '2px solid #4caf50',
+              padding: '20px',
+              fontSize: '20px',
+            },
+          });
+        } else {
+          this._toast.error(response.message, {
+            style: {
+              border: '2px solid #f44336',
+              padding: '20px',
+              fontSize: '20px',
+            },
+          });
+        }
+      });
   }
-    editArticle(article: ArticleItem) {
-      this._modalSvc.openModal<EditArticleModalComponent, ArticleItem>(EditArticleModalComponent, article)
-    }
+  editArticle(article: ArticleItem) {
+    this._modalSvc.openModal<EditArticleModalComponent, ArticleItem>(
+      EditArticleModalComponent,
+      article
+    );
+  }
 }

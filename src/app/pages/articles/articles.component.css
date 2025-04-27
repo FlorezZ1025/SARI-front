@@ -45,7 +45,9 @@
     /* margin-right: 60px; */
     > button {
         background-color: var(--mat-rojo-institucional);
+        font-size: 8px;
         color: white;
+        padding: 2rem;
         margin-right: 10px;
         width: 45%;
      }
@@ -58,8 +60,8 @@
 
 .all-cards {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    /* align-items: center;
+    justify-content: center; */
     flex-direction: column;
 }
 .year-cards{

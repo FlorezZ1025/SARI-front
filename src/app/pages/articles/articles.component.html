@@ -17,13 +17,8 @@
           <mat-spinner></mat-spinner>
           <h3>Cargando artículos, puede tardar unos minutos...</h3>
         </div>
-        }@else if (articles.length === 0) {
-        <div class="empty-state">
-          <mat-icon>article</mat-icon>
-          <h3>No hay artículos disponibles</h3>
-          <p>Agrega un artículo para comenzar a ver tus publicaciones.</p>
-        </div>
-        }@else { @for(group of groupedArticles; track $index) {
+        }@else {
+          @for(group of groupedArticles; track $index) {
           <div class="year-divider">
             <span>Artículos del {{ group.year }}</span>
           </div>
@@ -88,7 +83,12 @@
             } 
             
           </div>
-        
+        }@empty {
+          <div class="empty-state">
+            <mat-icon>article</mat-icon>
+            <h3>No hay artículos disponibles</h3>
+            <p>Agrega un artículo para comenzar a ver tus publicaciones.</p>
+          </div>
         } }
       </div>
     </section>

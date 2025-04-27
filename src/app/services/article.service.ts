@@ -33,6 +33,10 @@ export class ArticleService {
   constructor(private _client: HttpClient, private _authService: AuthService) {
     this._authService.currentUser$.subscribe(() => {
       console.log('User changed:', this._authService.currentUser()?.name);
+      if(AuthService.token === ''){
+        this.setEmptyArticles();
+        return;
+      }
       this._userId = this._authService.currentUser()?.id;
     });
   }
@@ -40,16 +44,9 @@ export class ArticleService {
   getCurrentArticles(): ArticleItem[] {
     return this.articleSubject.value;
   }
-  deleteLastArticle(): void {
-    const articles = this.getArticlesFromLocalStorage();
-    if (articles.length > 0) {
-      articles.pop();
-      localStorage.setItem(
-        `articles ${this._userId}`,
-        JSON.stringify(articles)
-      );
-      this.articleSubject.next(articles);
-    }
+
+  public setEmptyArticles(): void {
+    this.articleSubject.next([]);
   }
 
   public deleteArticle(id: string): Observable<ArticlesResponse> {

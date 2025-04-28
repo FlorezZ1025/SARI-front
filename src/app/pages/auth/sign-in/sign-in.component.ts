@@ -60,7 +60,7 @@ export class SignInComponent {
             fontSize: '20px',
           }
         });
-        this._router.navigate(['/articles']);
+        this._router.navigate(['/home']);
       } else {
         this._toast.error(response.message,
           {

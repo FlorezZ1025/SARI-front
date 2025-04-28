@@ -8,7 +8,9 @@
         <h1>Tus artículos</h1>
         <div class="article-options">
           <button mat-fab (click)="createArticle()">Agregrar artículo</button>
-          <button mat-fab (click)="extractArticleFromPure()">Importar de PURE</button>
+          <button mat-fab (click)="extractArticleFromPure()">
+            Importar de PURE
+          </button>
         </div>
       </div>
       <div class="all-cards">
@@ -17,48 +19,41 @@
           <mat-spinner></mat-spinner>
           <h3>Cargando artículos, puede tardar unos minutos...</h3>
         </div>
-        }@else {
-          @for(group of groupedArticles; track $index) {
-          <div class="year-divider">
-            <span>Artículos del {{ group.year }}</span>
-          </div>
+        }@else { @for(group of groupedArticles; track $index) {
+        <div class="year-divider">
+          <span>Artículos del {{ group.year }}</span>
+        </div>
           <div class="year-cards">
-          
-          @for (article of group.articles; track article.title ) {
+            @for (article of group.articles; track article.title ) {
             <div class="card">
-              @switch (article.state) {
-                @case ('escritura'){
-                  <span class="badge writing">{{article.state}}</span>
-                }
-                @case ('publicado'){
-                  <span class="badge published">{{article.state}}</span>
-                }
-                @case ('sometido'){
-                  <span class="badge submitted">{{article.state}}</span>
-                }
-                @default{
-                  <span class="badge accepted">{{article.state}}</span>
-                } 
-              }
+              @switch (article.state) { @case ('escritura'){
+              <span class="badge writing">{{ article.state }}</span>
+              } @case ('publicado'){
+              <span class="badge published">{{ article.state }}</span>
+              } @case ('sometido'){
+              <span class="badge submitted">{{ article.state }}</span>
+              } @default{
+              <span class="badge accepted">{{ article.state }}</span>
+              } }
               <div class="article-item-options">
-                @if(article.hyperlink === 'No disponible' && article.state === 'publicado') {
-                
-                  <button mat-icon-button (click)="editArticle(article)">
-                    <mat-icon>edit</mat-icon>
-                  </button>
-                  
+                @if(article.hyperlink === 'No disponible' && article.state ===
+                'publicado') {
+
+                <button mat-icon-button (click)="editArticle(article)">
+                  <mat-icon>edit</mat-icon>
+                </button>
+
+                } @else if(article.state !== 'publicado'){
+                <button mat-icon-button (click)="editArticle(article)">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button (click)="deleteArticle(article)">
+                  <mat-icon>delete</mat-icon>
+                </button>
                 }
-                @else if(article.state !== 'publicado'){
-                  <button mat-icon-button (click)="editArticle(article)">
-                    <mat-icon>edit</mat-icon>
-                  </button>
-                  <button mat-icon-button (click)="deleteArticle(article)">
-                    <mat-icon>delete</mat-icon>
-                  </button>
-                }
-                </div>
-    
-              <h3>{{ article.title}}</h3>
+              </div>
+
+              <h3>{{ article.title }}</h3>
               <ul>
                 @for(author of article.authors;track author) {
                 <li>
@@ -66,29 +61,29 @@
                 </li>
                 }
               </ul>
-    
+
               <small>{{ article.date }}</small>
-    
-              @if(article.state === "publicado") {
-    
+
+              @if(article.state === "publicado") { 
                 @if(article.hyperlink === "No disponible") {
-                <small>No disponible</small>
-                }@else{
-                <small
-                  ><a [href]="article.hyperlink" target="_blank">Enlace Doi</a></small
-                >
-                }
-              }
+              <small>No disponible</small>
+              }@else{
+              <small
+                ><a [href]="article.hyperlink" target="_blank"
+                  >Enlace Doi</a
+                ></small
+              >
+              } }
             </div>
-            } 
-            
-          </div>
+            }
+          
+        </div>
         }@empty {
-          <div class="empty-state">
-            <mat-icon>article</mat-icon>
-            <h3>No hay artículos disponibles</h3>
-            <p>Agrega un artículo para comenzar a ver tus publicaciones.</p>
-          </div>
+        <div class="empty-state">
+          <mat-icon>article</mat-icon>
+          <h3>No hay artículos disponibles</h3>
+          <p>Agrega un artículo para comenzar a ver tus publicaciones.</p>
+        </div>
         } }
       </div>
     </section>

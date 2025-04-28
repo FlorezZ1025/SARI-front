@@ -129,7 +129,6 @@ export class ArticleService {
   public loadArticlesOnStart() {
     const actualArticles = this.getArticlesFromLocalStorage();
     if(actualArticles.length > 0){
-      console.log('Articles loaded from local storage:', actualArticles);
       this.articleSubject.next(actualArticles);
       return of(actualArticles);
     }else{

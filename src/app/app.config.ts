@@ -3,9 +3,9 @@ import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { JwtInterceptor } from './interceptors/jwt.interceptor';
+import { JwtInterceptor } from './core/interceptors/jwt.interceptor';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { loaderInterceptor } from './interceptors/loader.interceptor';
+import { loaderInterceptor } from './core/interceptors/loader.interceptor';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { provideHotToastConfig } from '@ngneat/hot-toast';
 

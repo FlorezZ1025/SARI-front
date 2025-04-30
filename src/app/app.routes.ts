@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { SignInComponent } from '@auth/sign-in/sign-in.component';
 import { HomeComponent } from '@home/home-page/home.component';
 import { authGuard } from '@core/guards/auth.guard';
-import { LayoutComponent } from './layout/layout.component';
+import { LayoutComponent } from '@layout/layout.component';
 
 export const routes: Routes = [
   {

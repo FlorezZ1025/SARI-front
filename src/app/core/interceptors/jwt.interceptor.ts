@@ -14,7 +14,7 @@ export class JwtInterceptor implements HttpInterceptor {
     let cloneReq = req.clone(
       {
         setHeaders: { 
-          'ngrok-skip-browser-warning': 'true',
+          'ngrok-skip-browser-warning': '1',
         }
       }
     )

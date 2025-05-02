@@ -11,20 +11,14 @@ export class JwtInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     console.log('Interceptando la peticion: ', req.url);
-    let cloneReq = req.clone(
-      {
-        setHeaders: { 
-          'ngrok-skip-browser-warning': '1',
-        }
-      }
-    )
+    let cloneReq = req.clone()
 
     if(!req.url.includes('login') || !req.url.includes('register')){
       cloneReq = req.clone({
         setHeaders: { 
           'Content-Type': 'application/json',
           Authorization: `Bearer ${AuthService.token}`,
-          // 'ngrok-skip-browser-warning': 'true',
+          'ngrok-skip-browser-warning': 'true',
         }
       })
     }

@@ -24,7 +24,7 @@ export class JwtInterceptor implements HttpInterceptor {
         setHeaders: { 
           'Content-Type': 'application/json',
           Authorization: `Bearer ${AuthService.token}`,
-          'ngrok-skip-browser-warning': 'true',
+          // 'ngrok-skip-browser-warning': 'true',
         }
       })
     }

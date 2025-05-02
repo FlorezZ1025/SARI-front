@@ -28,11 +28,11 @@ export class JwtInterceptor implements HttpInterceptor {
         }
       })
     }
-    let lastReq = cloneReq.clone({
-      setHeaders: { 
-        'ngrok-skip-browser-warning': 'true',
-      }
-  })
+  //   let lastReq = cloneReq.clone({
+  //     setHeaders: { 
+  //       'ngrok-skip-browser-warning': 'true',
+  //     }
+  // })
     return next.handle(cloneReq);
   }
 }

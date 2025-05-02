@@ -91,7 +91,6 @@ export class EditArticleModalComponent {
       date: formatDate(this.editArticleForm.value.date, 'yyyy-MM-dd', 'en-US'),
       state: this.editArticleForm.value.state,
     };
-    console.log('Article to edit:', article);
     this._articleService
       .editArticle(article)
       .pipe(

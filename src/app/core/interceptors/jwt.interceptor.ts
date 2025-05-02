@@ -10,7 +10,7 @@ export class JwtInterceptor implements HttpInterceptor {
   constructor() { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    console.log('Interceptando la peticion: ', req.url);
+    // console.log('Interceptando la peticion: ', req.url);
     let cloneReq = req.clone()
 
     if(!req.url.includes('login') || !req.url.includes('register')){
@@ -22,11 +22,6 @@ export class JwtInterceptor implements HttpInterceptor {
         }
       })
     }
-  //   let lastReq = cloneReq.clone({
-  //     setHeaders: { 
-  //       'ngrok-skip-browser-warning': 'true',
-  //     }
-  // })
     return next.handle(cloneReq);
   }
 }

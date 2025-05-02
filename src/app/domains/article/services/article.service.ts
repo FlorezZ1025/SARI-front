@@ -76,11 +76,8 @@ export class ArticleService {
     const url = `${this.url}/articles/update`;
     const data = article;
     return this._client.post(url, data).pipe(
-      tap((response: any) => {
-        console.log('Response:', response);
-      }),
       map(
-        (response) =>
+        (response:any) =>
           ({
             message: response.message,
             statusCode: response.statusCode,

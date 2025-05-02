@@ -53,7 +53,7 @@ export class CreateArticleModalComponent {
   }
 
   articleForm: FormGroup = this.newArticleFormBuilder.group({
-    tittle: [
+    title: [
       '',
       {
         validators: [
@@ -102,7 +102,7 @@ export class CreateArticleModalComponent {
 
     authors.push(fullName);
     const article: ArticleItem = {
-      title: this.articleForm.value.tittle,
+      title: this.articleForm.value.title,
       authors: authors,
       date: this.articleForm.value.date,
       state: this.articleForm.value.state,

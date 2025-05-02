@@ -51,6 +51,8 @@ export class ArticlesComponent implements OnInit {
     });
   }
   ngOnInit(): void {
+    // const currentArticles = this._articleService.getCurrentArticles();
+    
     if (this._articleService.getCurrentArticles().length === 0) {
       this._articleService.loadArticlesOnStart().subscribe(() => {
         this._toast.success('Artículos cargados correctamente', {

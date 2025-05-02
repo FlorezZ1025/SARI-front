@@ -16,7 +16,8 @@ export class JwtInterceptor implements HttpInterceptor {
       cloneReq = req.clone({
         setHeaders: { 
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${AuthService.token}`
+          Authorization: `Bearer ${AuthService.token}`,
+          'ngrok-skip-browser-warning': '1'
         }
       })
     }

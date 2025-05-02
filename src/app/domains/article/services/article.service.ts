@@ -197,58 +197,6 @@ export class ArticleService {
     );
   }
 
-  // public getPureArticles(fullSepName: string): Observable<ArticlesResponse> {
-  //   const url = `${this.url}/articles/pure_articles`;
-
-  //   console.log(fullSepName);
-  //   const data = { fullname: fullSepName };
-
-  //   return this._client.post(url, data).pipe(
-  //     map(
-  //       (response: any) =>
-  //         ({
-  //           articles: response.data || [],
-  //           message: response.message,
-  //           statusCode: response.statusCode,
-  //         } as ArticlesResponse)
-  //     ),
-  //     tap((response) => {
-  //       console.log('artículos de Pure:', response.articles);
-  //       const articles = this.getArticlesFromLocalStorage();
-  //       const pureArticles = response.articles || [];
-  //       if (articles.length === 0) {
-  //         this.setArticlesInLocalStorage(pureArticles);
-  //         console.log('Articles set in local storage_first time');
-  //         return;
-  //       }
-  //       const titleArticleList = articles.map((art) => art.id);
-  //       console.log('titleArticleList', titleArticleList);
-  //       pureArticles.forEach((pureArt) => {
-  //         console.log('pureArt.tittle', pureArt.title);
-  //         if (!titleArticleList.includes(pureArt.id)) {
-  //           console.log(!titleArticleList.includes(pureArt.id));
-  //         }
-  //       });
-  //       this.setArticlesInLocalStorage(articles);
-  //       console.log('Articles set in local storage');
-  //     }),
-
-  //     catchError((error) =>
-  //       of(error).pipe(
-  //         tap((error) => console.error('Error:', error)),
-  //         map(
-  //           (error) =>
-  //             ({
-  //               message:
-  //                 error.error.message || 'Error al obtener los articulos',
-  //               statusCode: error.status || 500,
-  //             } as ArticlesResponse)
-  //         )
-  //       )
-  //     )
-  //   );
-  // }
-
   public getPureArticles(fullSepName: string): Observable<ArticlesResponse> {
     const url = `${this.url}/articles/pure_articles`;
     const data = { fullname: fullSepName };

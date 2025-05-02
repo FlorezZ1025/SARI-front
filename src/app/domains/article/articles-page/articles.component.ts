@@ -12,6 +12,7 @@ import { CreateArticleModalComponent } from '@articles/components/create-article
 import { ArticleGroup } from '@core/interfaces/article-group.interface';
 import { HotToastService } from '@ngneat/hot-toast';
 import { EditArticleModalComponent } from '@articles/components/edit-article-modal/edit-article-modal.component';
+import * as AOS from 'aos';
 
 @Component({
   selector: 'app-articles',
@@ -51,8 +52,7 @@ export class ArticlesComponent implements OnInit {
     });
   }
   ngOnInit(): void {
-    // const currentArticles = this._articleService.getCurrentArticles();
-    
+    AOS.init()
     if (this._articleService.getCurrentArticles().length === 0) {
       this._articleService.loadArticlesOnStart().subscribe(() => {
         this._toast.success('Artículos cargados correctamente', {

@@ -29,9 +29,12 @@
             "styles": [
               "src/styles.css",
               "src/custom-theme.scss",
+              "node_modules/aos/dist/aos.css",
               "node_modules/@ngneat/hot-toast/src/styles/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/aos/dist/aos.js"
+            ]
           },
           "configurations": {
             "production": {

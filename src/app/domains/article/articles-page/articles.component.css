@@ -77,10 +77,18 @@
     flex-wrap: wrap;
     place-content: center;
     gap: 20px;
-    transition: all 0.3s ease-in-out;
+    /* transition: all 0.3s ease-in-out; */
+}
+/*Animacion*/
+.card{
+    transition: all 2s ease-in-out;
+    view-timeline-name: --reveal;
 
-    /* align-items: stretch; */
+    animation: show;
+    animation-fill-mode: both;
 
+    animation-timeline: --reveal;
+    animation-range: entry 10% cover 30%;
 }
 .card {
     position: relative;
@@ -89,7 +97,6 @@
     padding: 5%;
     border-radius: 2px;
     max-width: 100%;
-    /* border: var(--mat-negro-intenso) 0.2px solid; */
     text-align: center;
     display: flex;
     flex-direction: column;
@@ -218,5 +225,17 @@
   }
   .year-divider:not(:empty)::after {
     margin-left: .3em;
+  }
+
+  @keyframes show {
+    from {
+        opacity: 0; 
+        scales:10%;
+        translate:-100px 0
+    }
+    to{
+        opacity: 1; scale: 100%;
+        translate: 0 0;
+    }
   }
   

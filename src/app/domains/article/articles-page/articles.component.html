@@ -23,7 +23,7 @@
         <div class="year-divider">
           <span>Artículos del {{ group.year }}</span>
         </div>
-          <div class="year-cards">
+          <div class="year-cards" >
             @for (article of group.articles; track article.title ) {
             <div class="card">
               @switch (article.state) { @case ('escritura'){

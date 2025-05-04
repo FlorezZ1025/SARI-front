@@ -217,6 +217,11 @@
 .loader:after {
   left: 3.5em;
 }
+.card-loader{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .year-divider {
   display: flex;
   align-items: center;

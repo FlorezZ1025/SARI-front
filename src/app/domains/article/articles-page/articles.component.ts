@@ -34,6 +34,7 @@ export class ArticlesComponent implements OnInit {
   private _authService = inject(AuthService);
   private _articleService = inject(ArticleService);
   private _loaderService = inject(LoaderService);
+  oe = '';
 
   constructor() {
     this.user = this._authService.currentUser;
@@ -54,24 +55,17 @@ export class ArticlesComponent implements OnInit {
   ngOnInit(): void {
     if (this._articleService.getCurrentArticles().length === 0) {
       this._articleService.loadArticlesOnStart().subscribe({
-        next: () => {
-          this._toast.success('Artículos cargados correctamente', {
-            style: {
-              border: '2px solid #4caf50',
-              padding: '20px',
-              fontSize: '20px',
-            },
-          });
-        },
+        // next: () => {},
         error: () => {
           this._toast.error('Error cargando artículos', {
             style: {
               border: '2px solid #f44336',
-              padding: '20px',
-              fontSize: '20px',
+              // padding: '20px',
+              // fontSize: '20px',
             },
           });
         },
+
       });
     }
   }

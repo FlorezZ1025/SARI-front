@@ -235,4 +235,26 @@ export class ArticleService {
       this.setArticlesInLocalStorage([...currentArticles, ...newArticles]);
     }
   }
+
+  public addArticleHyperlink(article: ArticleItem, hyperlink: string) {
+    const url = `${this.url}/articles/add_hyperlink`;
+    const data = {
+      id: article.id,
+      hyperlink: hyperlink,
+    };
+    return this._client.post<string>(url, data).pipe(
+      tap(articleId => {
+        const articles = this.getArticlesFromLocalStorage();
+        const articleToUpdate = articles.find(art => art.id === articleId);
+        if (articleToUpdate) {
+          articleToUpdate.hyperlink = hyperlink;
+          this.setArticlesInLocalStorage(articles);
+        }
+      }),
+      catchError(error => {
+        console.error('Error:', error);
+        return of(error);
+      })
+    );
+  }
 }

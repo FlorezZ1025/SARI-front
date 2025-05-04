@@ -32,6 +32,7 @@ module.exports = tseslint.config(
         },
       ],
       '@angular-eslint/no-input-rename': 'off',
+      'prettier/prettier':["error",{"endOfLine":"auto"}],
     },
   },
   {

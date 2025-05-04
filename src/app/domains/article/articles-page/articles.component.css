@@ -44,7 +44,7 @@
   /* margin-right: 60px; */
   > button {
     background-color: var(--mat-rojo-institucional);
-    font-size: 8px;
+    font-size: 0.6lh;
     color: white;
     padding: 2rem;
     margin-right: 10px;
@@ -80,12 +80,10 @@
 .card {
   /* transition: all 2s ease-in-out; */
   view-timeline-name: --reveal;
-
   animation: show;
   animation-fill-mode: both;
-
   animation-timeline: --reveal;
-  animation-range: entry 10% cover 30%;
+  animation-range: entry 5% cover 20%;
 }
 .card {
   position: relative;
@@ -178,24 +176,47 @@
   margin-top: 20px;
 }
 
-.spinner-container {
+.loader-container {
+  position: fixed;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 60vh;
+  transition: all 1.5s infinite ease-in-out;
+  z-index: 9999;
   > h3 {
     color: #616161;
     font-size: 1.5rem;
     font-weight: bold;
     margin-top: 20px;
   }
-  > mat-spinner {
-    display: flex;
-    justify-content: center;
-  }
 }
-
+.loader, .loader:before, .loader:after {
+  border-radius: 50%;
+  width: 2.5em;
+  height: 2.5em;
+  animation: loader 1.8s infinite ease-in-out;
+}
+.loader{
+  color: #2196f3;
+  font-size: 10px;
+  position: relative;
+  animation-delay: -0.16s;
+  margin-bottom: 2em;
+}
+.loader:before, .loader:after {
+  content: '';
+  position: absolute;
+  top: 0;
+}
+.loader:before{
+  left: -3.5em;
+  animation-delay: -0.32s;
+}
+.loader:after {
+  left: 3.5em;
+}
 .year-divider {
   display: flex;
   align-items: center;

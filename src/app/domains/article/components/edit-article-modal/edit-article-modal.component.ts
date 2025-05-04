@@ -57,6 +57,10 @@ export class EditArticleModalComponent implements AfterViewInit {
     this.editArticleForm.valueChanges.subscribe(() => {
       console.log(this.editArticleForm.valid);
     });
+
+    this.addHyperlinkForm.valueChanges.subscribe(() => {
+      console.log(this.addHyperlinkForm.valid);
+    });
   }
   ngAfterViewInit() {
     this.cdr.detectChanges();
@@ -82,9 +86,39 @@ export class EditArticleModalComponent implements AfterViewInit {
     state: [this.article.state, { validators: [Validators.required] }],
   });
 
-  onSubmit() {
-    console.log(this.editArticleForm.value);
+  addHyperlinkForm: FormGroup = this.newArticleFormBuilder.group({
+    hyperlink: ['', { validators: [Validators.required] }],
+  });
 
+  onSubmitHyperlink() {
+    const newHyperlink = this.addHyperlinkForm.value.hyperlink;
+    console.log(newHyperlink);
+    return this._articleService
+      .addArticleHyperlink(this.article, newHyperlink)
+      .pipe(tap(() => this._modalSvc.closeModal()))
+      .subscribe({
+        next: () => {
+          this._toast.success('Hypervínculo agregado', {
+            style: {
+              padding: '20px',
+              fontSize: '20px',
+              border: '2px solid #4caf50',
+            },
+          });
+        },
+        error: () => {
+          this._toast.error('Error al agregar el enlace', {
+            style: {
+              padding: '20px',
+              fontSize: '20px',
+              border: '2px solid #f44336',
+            },
+          });
+        },
+      });
+  }
+  onSubmitEdited() {
+    console.log(this.editArticleForm.value);
     const authors = this.editArticleForm.value.authors
       .split(',')
       .map((author: string) => author.toLocaleLowerCase().trim())

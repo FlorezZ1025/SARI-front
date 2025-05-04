@@ -1,19 +1,35 @@
 <div mat-dialog-tittle class="dialog-header">
   <h1>Editando artículo</h1>
 </div>
-<form action="" [formGroup]="editArticleForm" (ngSubmit)="onSubmit()">
-  @if (article.state === 'publicado') {
-    <div class="row">
-      <mat-form-field class="full-width" appearence="outline">
-        <mat-label>Adjuntar PDF</mat-label>
-        <input
-          matInput
-          placeholder="Ingresa un nuevo nombre"
-          formControlName="title"
-          required />
-      </mat-form-field>
+@if (article.state === 'publicado') {
+  <form
+    action=""
+    [formGroup]="addHyperlinkForm"
+    (ngSubmit)="onSubmitHyperlink()">
+    <div mat-dialog-content class="content">
+      <div class="row">
+        <mat-form-field class="full-width" appearence="outline">
+          <mat-label>Agregar hyperlink</mat-label>
+          <input
+            matInput
+            placeholder="Ingresa un enlace"
+            formControlName="hyperlink"
+            required />
+        </mat-form-field>
+      </div>
     </div>
-  } @else {
+    <div mat-dialog-actions class="dialog-actions">
+      <button
+        mat-button
+        type="submit"
+        color="primary"
+        [disabled]="this.addHyperlinkForm.invalid">
+        Agregar
+      </button>
+    </div>
+  </form>
+} @else {
+  <form action="" [formGroup]="editArticleForm" (ngSubmit)="onSubmitEdited()">
     <div mat-dialog-content class="content">
       <div class="row">
         <mat-form-field class="full-width" appearence="outline">
@@ -56,14 +72,14 @@
         </mat-form-field>
       </div>
     </div>
-  }
-  <div mat-dialog-actions class="dialog-actions">
-    <button
-      mat-button
-      color="primary"
-      [disabled]="this.editArticleForm.invalid"
-      type="submit">
-      Editar
-    </button>
-  </div>
-</form>
+    <div mat-dialog-actions class="dialog-actions">
+      <button
+        type="submit"
+        mat-button
+        color="primary"
+        [disabled]="this.editArticleForm.invalid">
+        Editar
+      </button>
+    </div>
+  </form>
+}

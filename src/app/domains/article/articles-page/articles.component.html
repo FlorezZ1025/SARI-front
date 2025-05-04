@@ -7,16 +7,21 @@
       <div class="header-section">
         <h1>Tus artículos</h1>
         <div class="article-options">
-          <button mat-fab (click)="createArticle()">Agregrar artículo</button>
-          <button mat-fab (click)="extractArticleFromPure()">
+          <button mat-fab (click)="createArticle()" [disabled]="loading$">
+            Agregrar artículo
+          </button>
+          <button
+            mat-fab
+            (click)="extractArticleFromPure()"
+            [disabled]="loading$">
             Importar de PURE
           </button>
         </div>
       </div>
       <div class="all-cards">
         @if (loading$) {
-          <div class="spinner-container">
-            <mat-spinner></mat-spinner>
+          <div class="loader-container">
+            <div class="loader"></div>
             <h3>Cargando artículos, puede tardar unos minutos...</h3>
           </div>
         } @else {
@@ -25,63 +30,77 @@
               <span>Artículos del {{ group.year }}</span>
             </div>
             <div class="year-cards">
-              @for (article of group.articles; track article.title) {
-                <div class="card">
-                  @switch (article.state) {
-                    @case ('escritura') {
-                      <span class="badge writing">{{ article.state }}</span>
+              @for (article of group.articles; track article.id) {
+                @defer (on viewport) {
+                  <div class="card">
+                    @switch (article.state) {
+                      @case ('escritura') {
+                        <span class="badge writing">{{ article.state }}</span>
+                      }
+                      @case ('publicado') {
+                        <span class="badge published">{{ article.state }}</span>
+                      }
+                      @case ('sometido') {
+                        <span class="badge submitted">{{ article.state }}</span>
+                      }
+                      @default {
+                        <span class="badge accepted">{{ article.state }}</span>
+                      }
                     }
-                    @case ('publicado') {
-                      <span class="badge published">{{ article.state }}</span>
-                    }
-                    @case ('sometido') {
-                      <span class="badge submitted">{{ article.state }}</span>
-                    }
-                    @default {
-                      <span class="badge accepted">{{ article.state }}</span>
-                    }
-                  }
-                  <div class="article-item-options">
-                    @if (
-                      article.hyperlink === 'No disponible' &&
-                      article.state === 'publicado'
-                    ) {
-                      <button mat-icon-button (click)="editArticle(article)">
-                        <mat-icon>edit</mat-icon>
-                      </button>
-                    } @else if (article.state !== 'publicado') {
-                      <button mat-icon-button (click)="editArticle(article)">
-                        <mat-icon>edit</mat-icon>
-                      </button>
-                      <button mat-icon-button (click)="deleteArticle(article)">
-                        <mat-icon>delete</mat-icon>
-                      </button>
+                    <div class="article-item-options">
+                      @if (
+                        article.hyperlink === 'No disponible' &&
+                        article.state === 'publicado'
+                      ) {
+                        <button mat-icon-button (click)="editArticle(article)">
+                          <mat-icon>edit</mat-icon>
+                        </button>
+                      } @else if (article.state !== 'publicado') {
+                        <button mat-icon-button (click)="editArticle(article)">
+                          <mat-icon>edit</mat-icon>
+                        </button>
+                        <button
+                          mat-icon-button
+                          (click)="deleteArticle(article)">
+                          <mat-icon>delete</mat-icon>
+                        </button>
+                      }
+                    </div>
+                    <h3>{{ article.title }}</h3>
+                    <ul>
+                      @for (author of article.authors; track author) {
+                        <li>
+                          <p>{{ author }}</p>
+                        </li>
+                      }
+                    </ul>
+                    <small>{{ article.date }}</small>
+                    @if (article.state === 'publicado') {
+                      @if (article.hyperlink === 'No disponible') {
+                        <small>No disponible</small>
+                      } @else {
+                        <small
+                          ><a [href]="article.hyperlink" target="_blank"
+                            >Enlace Doi</a
+                          ></small
+                        >
+                      }
                     }
                   </div>
-
-                  <h3>{{ article.title }}</h3>
-                  <ul>
-                    @for (author of article.authors; track author) {
-                      <li>
-                        <p>{{ author }}</p>
-                      </li>
-                    }
-                  </ul>
-
-                  <small>{{ article.date }}</small>
-
-                  @if (article.state === 'publicado') {
-                    @if (article.hyperlink === 'No disponible') {
-                      <small>No disponible</small>
-                    } @else {
-                      <small
-                        ><a [href]="article.hyperlink" target="_blank"
-                          >Enlace Doi</a
-                        ></small
-                      >
-                    }
-                  }
-                </div>
+                } @placeholder {
+                  <div class="card-placeholder">
+                    <!-- <mat-spinner></mat-spinner> -->
+                  </div>
+                } @loading (minimum 1000ms) {
+                  <div class="card-loader">
+                    <mat-spinner></mat-spinner>
+                  </div>
+                } @error {
+                  <div class="card-error">
+                    <mat-icon>error</mat-icon>
+                    <p>Error al cargar el artículo</p>
+                  </div>
+                }
               }
             </div>
           } @empty {

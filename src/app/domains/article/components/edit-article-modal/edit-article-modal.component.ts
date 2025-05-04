@@ -1,4 +1,10 @@
-import { ChangeDetectorRef, Component, inject, signal } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  inject,
+  signal,
+  AfterViewInit,
+} from '@angular/core';
 import { MatDialogContent } from '@angular/material/dialog';
 import { MatLabel, MatFormField } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -37,7 +43,7 @@ const MATERIAL_MODULES = [
   templateUrl: './edit-article-modal.component.html',
   styleUrl: './edit-article-modal.component.css',
 })
-export class EditArticleModalComponent {
+export class EditArticleModalComponent implements AfterViewInit {
   private readonly _modalSvc = inject(ModalService);
   private _toast = inject(HotToastService);
   private _articleService = inject(ArticleService);
@@ -48,7 +54,7 @@ export class EditArticleModalComponent {
   article: ArticleItem = inject(MAT_DIALOG_DATA).data;
   isEditing = signal(true);
   constructor() {
-    this.editArticleForm.valueChanges.subscribe((value) => {
+    this.editArticleForm.valueChanges.subscribe(() => {
       console.log(this.editArticleForm.valid);
     });
   }
@@ -94,14 +100,13 @@ export class EditArticleModalComponent {
     this._articleService
       .editArticle(article)
       .pipe(
-        tap((response) => {
+        tap(response => {
           if (response.statusCode === 200) {
             this._toast.success(response.message, {
               style: {
                 padding: '20px',
                 fontSize: '20px',
-              border: '2px solid #4caf50',
-
+                border: '2px solid #4caf50',
               },
             });
             this._modalSvc.closeModal();
@@ -110,8 +115,7 @@ export class EditArticleModalComponent {
               style: {
                 padding: '20px',
                 fontSize: '20px',
-              border: '2px solid #f44336',
-
+                border: '2px solid #f44336',
               },
             });
           }

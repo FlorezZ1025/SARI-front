@@ -12,7 +12,6 @@ import { CreateArticleModalComponent } from '@articles/components/create-article
 import { ArticleGroup } from '@core/interfaces/article-group.interface';
 import { HotToastService } from '@ngneat/hot-toast';
 import { EditArticleModalComponent } from '@articles/components/edit-article-modal/edit-article-modal.component';
-import * as AOS from 'aos';
 
 @Component({
   selector: 'app-articles',
@@ -25,7 +24,7 @@ export class ArticlesComponent implements OnInit {
   user: Signal<User | null | undefined>;
   fullName: string;
   separatedFullName: string;
-  loading$: Boolean = false;
+  loading$ = false;
   articles: ArticleItem[] = [];
   groupedArticles: ArticleGroup[] = [];
   sortedYears: string[] = [];
@@ -39,30 +38,32 @@ export class ArticlesComponent implements OnInit {
   constructor() {
     this.user = this._authService.currentUser;
 
-    this.fullName = `${this.user()?.name} ${this.user()?.lastName}` || '';
+    this.fullName = `${this.user()?.name} ${this.user()?.lastName}`;
     this.separatedFullName = this.fullName.toLowerCase().split(' ').join('-');
 
     this._articleService.articles$.subscribe(() => {
       this.articles = this._articleService.getCurrentArticles();
       this.groupedArticles = this.groupArticlesByYear(this.articles);
-      this.sortedYears = this.groupedArticles.map((group) => group.year);
+      this.sortedYears = this.groupedArticles.map(group => group.year);
     });
-    this._loaderService.loading$.subscribe((loading) => {
+    this._loaderService.loading$.subscribe(loading => {
       this.loading$ = loading;
     });
   }
+
   ngOnInit(): void {
-    AOS.init()
     if (this._articleService.getCurrentArticles().length === 0) {
-      this._articleService.loadArticlesOnStart().subscribe(() => {
-        this._toast.success('Artículos cargados correctamente', {
-          style: {
-            border: '2px solid #4caf50',
-            padding: '20px',
-            fontSize: '20px',
-          },
-        });
-        (error: any) => {
+      this._articleService.loadArticlesOnStart().subscribe({
+        next: () => {
+          this._toast.success('Artículos cargados correctamente', {
+            style: {
+              border: '2px solid #4caf50',
+              padding: '20px',
+              fontSize: '20px',
+            },
+          });
+        },
+        error: () => {
           this._toast.error('Error cargando artículos', {
             style: {
               border: '2px solid #f44336',
@@ -70,14 +71,14 @@ export class ArticlesComponent implements OnInit {
               fontSize: '20px',
             },
           });
-        };
+        },
       });
     }
   }
   groupArticlesByYear(articles: ArticleItem[]): ArticleGroup[] {
     const map = new Map<string, ArticleItem[]>();
 
-    articles.forEach((item) => {
+    articles.forEach(item => {
       const year = item.date.match(/\d{4}/)?.[0];
       if (year) {
         if (!map.has(year)) {
@@ -101,7 +102,7 @@ export class ArticlesComponent implements OnInit {
   }
 
   formatAuthors(authors: string[]): string {
-    authors = authors.map((author) => author.toLocaleLowerCase().trim());
+    authors = authors.map(author => author.toLocaleLowerCase().trim());
     const uniqueAuthors = Array.from(new Set(authors));
     return uniqueAuthors.join(', ');
   }
@@ -110,7 +111,7 @@ export class ArticlesComponent implements OnInit {
     console.log('entrando con el nombre: ', this.separatedFullName);
     this._articleService
       .getPureArticles(this.separatedFullName)
-      .subscribe((response: any) => {
+      .subscribe(response => {
         if (response.statusCode === 200) {
           this._toast.success('Articulos extraidos correctamente', {
             style: {
@@ -132,27 +133,25 @@ export class ArticlesComponent implements OnInit {
   }
 
   deleteArticle(article: ArticleItem): void {
-    this._articleService
-      .deleteArticle(article.id || '')
-      .subscribe((response: any) => {
-        if (response.statusCode === 200) {
-          this._toast.success('Artículo eliminado correctamente', {
-            style: {
-              border: '2px solid #4caf50',
-              padding: '20px',
-              fontSize: '20px',
-            },
-          });
-        } else {
-          this._toast.error(response.message, {
-            style: {
-              border: '2px solid #f44336',
-              padding: '20px',
-              fontSize: '20px',
-            },
-          });
-        }
-      });
+    this._articleService.deleteArticle(article.id || '').subscribe(response => {
+      if (response.statusCode === 200) {
+        this._toast.success('Artículo eliminado correctamente', {
+          style: {
+            border: '2px solid #4caf50',
+            padding: '20px',
+            fontSize: '20px',
+          },
+        });
+      } else {
+        this._toast.error(response.message, {
+          style: {
+            border: '2px solid #f44336',
+            padding: '20px',
+            fontSize: '20px',
+          },
+        });
+      }
+    });
   }
   editArticle(article: ArticleItem) {
     this._modalSvc.openModal<EditArticleModalComponent, ArticleItem>(

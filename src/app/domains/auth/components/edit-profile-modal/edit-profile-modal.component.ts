@@ -1,4 +1,9 @@
-import { ChangeDetectorRef, Component, inject, Signal } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  inject,
+  AfterViewInit,
+} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogContent } from '@angular/material/dialog';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
@@ -9,6 +14,7 @@ import { AuthService } from '@auth/services/auth.service';
 import { User } from '@core/interfaces/user.interface';
 import { tap } from 'rxjs';
 import { HotToastService } from '@ngneat/hot-toast';
+import { AuthResponse } from '@core/interfaces/auth-response.interface';
 
 const MATERIAL_MODULES = [
   MatLabel,
@@ -25,19 +31,18 @@ const MATERIAL_MODULES = [
   standalone: true,
   imports: [MATERIAL_MODULES],
   templateUrl: './edit-profile-modal.component.html',
-  styleUrl: './edit-profile-modal.component.css'
+  styleUrl: './edit-profile-modal.component.css',
 })
-export class EditProfileModalComponent {
-
+export class EditProfileModalComponent implements AfterViewInit {
   private readonly _modalSvc = inject(ModalService);
   private readonly _authService = inject(AuthService);
   private _toast = inject(HotToastService);
   private cdr = inject(ChangeDetectorRef);
 
   user = this._authService.currentUser();
-  editInfo = {}
-  constructor(){
-    this.userInfoForm.valueChanges.subscribe((value) => {
+  editInfo = {};
+  constructor() {
+    this.userInfoForm.valueChanges.subscribe(value => {
       console.log(this.userInfoForm);
       Object.assign(this.editInfo, value);
     });
@@ -57,17 +62,17 @@ export class EditProfileModalComponent {
           Validators.pattern('^[A-Za-zÁÉÍÓÚÜáéíóúüñÑ\\s]+$'),
           Validators.maxLength(30),
         ],
-      }
+      },
     ],
-    lastName: 
-    [this.user?.lastName,
+    lastName: [
+      this.user?.lastName,
       {
         validators: [
           Validators.required,
           Validators.pattern('^[A-Za-zÁÉÍÓÚÜáéíóúüñÑ\\s]+$'),
           Validators.maxLength(30),
         ],
-      }
+      },
     ],
     email: [
       this.user?.email,
@@ -77,44 +82,42 @@ export class EditProfileModalComponent {
           Validators.email,
           Validators.maxLength(30),
         ],
-      }
+      },
     ],
   });
 
   onSubmit() {
-
-    const user:User = {
+    const user: User = {
       id: this.user?.id,
       name: this.userInfoForm.value.name?.toLocaleLowerCase() || '',
       lastName: this.userInfoForm.value.lastName?.toLocaleLowerCase() || '',
       email: this.userInfoForm.value.email?.toLowerCase() || '',
-    }
-    this._authService.updateUserInfo(user).pipe(
-      tap((response:any) => {
-        if (response.statusCode === 200) {
-          this._toast.success('Información actualizada correctamente', {
-            style:{
-              padding: '20px',
-              fontSize: '20px',
-              border: '2px solid #4caf50',
-            }
-          });
-        } else {
-          this._toast.error(response.message,
-            {
-              style:{
+    };
+    this._authService
+      .updateUserInfo(user)
+      .pipe(
+        tap((response: AuthResponse) => {
+          if (response.statusCode === 200) {
+            this._toast.success('Información actualizada correctamente', {
+              style: {
                 padding: '20px',
                 fontSize: '20px',
-              border: '2px solid #f44336',
-
-              }
-            }
-          );
-        }
-      })
-    ).subscribe()
-
+                border: '2px solid #4caf50',
+              },
+            });
+          } else {
+            this._toast.error(response.message, {
+              style: {
+                padding: '20px',
+                fontSize: '20px',
+                border: '2px solid #f44336',
+              },
+            });
+          }
+        })
+      )
+      .subscribe();
 
     this._modalSvc.closeModal();
-    }
+  }
 }

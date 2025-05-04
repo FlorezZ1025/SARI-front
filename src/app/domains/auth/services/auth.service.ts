@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { BehaviorSubject, catchError, map, Observable, of, tap } from 'rxjs';
 import { environment } from '@config/environments/environment';
@@ -59,31 +59,31 @@ export class AuthService {
     }
   }
 
-  //Implementar funcion para editar el perfil del usuario
-
   public doLogin(user: LoginRequest): Observable<AuthResponse> {
-    return this._client.post(this.url + '/auth/login', user).pipe(
-      tap((response: any) => {
-        this.setSession(response.token);
+    return this._client.post<AuthResponse>(this.url + '/auth/login', user).pipe(
+      tap(response => {
+        if (response.token) {
+          this.setSession(response.token);
+        }
       }),
       map(
-        (response) =>
+        response =>
           ({
             token: response.token,
             message: response.message,
             statusCode: response.statusCode,
-          } as AuthResponse)
+          }) as AuthResponse
       ),
 
-      catchError((error) =>
+      catchError(error =>
         of(error).pipe(
-          tap((error) => console.log(error)),
+          tap(error => console.log(error)),
           map(
-            (error) =>
+            error =>
               ({
                 message: error.error.message,
                 statusCode: error.status,
-              } as AuthResponse)
+              }) as AuthResponse
           )
         )
       )
@@ -95,21 +95,21 @@ export class AuthService {
       .post<AuthResponse>(this.url + '/auth/register', user)
       .pipe(
         map(
-          (response) =>
+          response =>
             ({
               message: response.message,
               statusCode: response.statusCode,
-            } as AuthResponse)
+            }) as AuthResponse
         ),
-        catchError((error) =>
+        catchError(error =>
           of(error).pipe(
-            tap((error) => console.log(error.error)),
+            tap(error => console.log(error.error)),
             map(
-              (error) =>
+              error =>
                 ({
                   message: error.error.message,
                   statusCode: error.status,
-                } as AuthResponse)
+                }) as AuthResponse
             )
           )
         )
@@ -118,27 +118,29 @@ export class AuthService {
 
   public updateUserInfo(userInfo: User): Observable<AuthResponse> {
     const url = `${this.url}/auth/update`;
-    return this._client.post(url, userInfo).pipe(
-      tap((response: any) => {
-        this.setSession(response.token);
+    return this._client.post<AuthResponse>(url, userInfo).pipe(
+      tap(response => {
+        if (response.token) {
+          this.setSession(response.token);
+        }
       }),
       map(
-        (response) =>
+        response =>
           ({
             token: response.token,
             message: response.message,
             statusCode: response.statusCode,
-          } as AuthResponse)
+          }) as AuthResponse
       ),
-      catchError((error) =>
+      catchError(error =>
         of(error).pipe(
-          tap((error) => console.log(error.error)),
+          tap(error => console.log(error.error)),
           map(
-            (error) =>
+            error =>
               ({
                 message: error.error.message,
                 statusCode: error.status,
-              } as AuthResponse)
+              }) as AuthResponse
           )
         )
       )

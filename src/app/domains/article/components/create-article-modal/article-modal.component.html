@@ -10,8 +10,7 @@
           matInput
           placeholder="Nombre del artículo"
           formControlName="title"
-          required
-        />
+          required />
       </mat-form-field>
     </div>
     <div class="row">
@@ -20,8 +19,7 @@
         <input
           matInput
           placeholder="No tiene que digitar su nombre"
-          formControlName="authors"
-        />
+          formControlName="authors" />
       </mat-form-field>
     </div>
     <div class="row">
@@ -37,19 +35,23 @@
     <div>
       <mat-form-field class="full-width" appearence="outline">
         <mat-label>Fecha de inicio del artículo</mat-label>
-        <input matInput [matDatepicker]="picker" formControlName="date"/>
+        <input matInput [matDatepicker]="picker" formControlName="date" />
         <mat-hint>MM/DD/YYYY</mat-hint>
         <mat-datepicker-toggle
           matIconSuffix
-          [for]="picker"
-        ></mat-datepicker-toggle>
+          [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
     </div>
-   
   </div>
 
-    <div mat-dialog-actions class="dialog-actions">
-        <button mat-button color="primary" [disabled]="articleForm.invalid" type="submit">Crear</button>
-    </div>
+  <div mat-dialog-actions class="dialog-actions">
+    <button
+      mat-button
+      color="primary"
+      [disabled]="articleForm.invalid"
+      type="submit">
+      Crear
+    </button>
+  </div>
 </form>

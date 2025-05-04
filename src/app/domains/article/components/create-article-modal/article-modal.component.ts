@@ -1,4 +1,9 @@
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  inject,
+  AfterViewInit,
+} from '@angular/core';
 import { MatDialogContent } from '@angular/material/dialog';
 import { MatLabel, MatFormField } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -36,17 +41,14 @@ const MATERIAL_MODULES = [
   templateUrl: './article-modal.component.html',
   styleUrl: './article-modal.component.css',
 })
-export class CreateArticleModalComponent {
+export class CreateArticleModalComponent implements AfterViewInit {
   private readonly _modalSvc = inject(ModalService);
   private _toast = inject(HotToastService);
   private _authService = inject(AuthService);
-  private cdr = inject(ChangeDetectorRef);	
+  private cdr = inject(ChangeDetectorRef);
   private _articleService = inject(ArticleService);
 
   newArticleFormBuilder = inject(FormBuilder);
-
-  constructor(
-  ) {}
 
   ngAfterViewInit() {
     this.cdr.detectChanges();
@@ -70,7 +72,6 @@ export class CreateArticleModalComponent {
           Validators.maxLength(100),
           Validators.pattern('^[A-Za-zÁÉÍÓÚÜáéíóúüñÑ\\s\\,]+$'),
           Validators.minLength(5),
-
         ],
       },
     ],
@@ -89,9 +90,7 @@ export class CreateArticleModalComponent {
   });
 
   onSubmit(): void {
-    console.log(this.articleForm.value);
-
-    let fullName =
+    const fullName =
       this._authService.currentUser()?.name +
       ' ' +
       this._authService.currentUser()?.lastName;
@@ -108,11 +107,10 @@ export class CreateArticleModalComponent {
       state: this.articleForm.value.state,
     };
     article.date = formatDate(article.date, 'yyyy-MM-dd', 'en-US');
-
     this._articleService
       .createArticle(article)
       .pipe(
-        tap((response) => {
+        tap(response => {
           if (response.statusCode === 200) {
             this._toast.success('Artículo creado correctamente', {
               style: {
@@ -134,7 +132,6 @@ export class CreateArticleModalComponent {
       )
       .subscribe();
     this.articleForm.reset();
-
     this._modalSvc.closeModal();
   }
 }

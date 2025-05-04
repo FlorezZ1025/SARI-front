@@ -1,36 +1,50 @@
 /* You can add global styles to this file, and also import other style files */
 :root {
-  --mat-primary: #7D0A0A; /*  */
-  --mat-accent: #BF3131;  /*  */
-  --mat-warn: #EAD196;    /*  */
-  --mat-text: #000000;   /*  */
-  --mat-rojo-institucional: #B40019; /*  */
-  --mat-amarillo-institucional: #FFD400; /*  */
+  --mat-primary: #7d0a0a; /*  */
+  --mat-accent: #bf3131; /*  */
+  --mat-warn: #ead196; /*  */
+  --mat-text: #000000; /*  */
+  --mat-rojo-institucional: #b40019; /*  */
+  --mat-amarillo-institucional: #ffd400; /*  */
   --mat-azul-institucional: #181727; /*  */
   --mat-gris-claro: #c5c2c2; /*  */
-  --mat-negro-intenso: #1E1E1E; 
+  --mat-negro-intenso: #1e1e1e;
   --mat-nav-var: #181727;
-
-
 }
 
 .mat-mdc-button {
   --mdc-theme-primary: var(--mat-primary);
   --mdc-theme-secondary: var(--mat-accent);
   --mdc-theme-error: var(--mat-warn);
-  border-radius: 0px;;
+  border-radius: 0px;
 }
 
-body{
-    margin: 0;
-    
-    /* height: 100vh; */
-    font-family:sans-serif;
+body {
+  margin: 0;
+
+  /* height: 100vh; */
+  font-family: sans-serif;
 }
 
-html, body { 
+html,
+body {
   height: 100%;
   background: var(--mat-gris-claro);
-
 }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
+@keyframes show {
+  from {
+    opacity: 0;
+    scales: 10%;
+    translate: -100px 0;
+  }
+  to {
+    opacity: 1;
+    scale: 100%;
+    translate: 0 0;
+  }
+}

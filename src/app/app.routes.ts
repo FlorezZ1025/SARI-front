@@ -12,9 +12,7 @@ export const routes: Routes = [
   {
     path: 'sign-up',
     loadComponent: () =>
-      import('@auth/sign-up/sign-up.component').then(
-        (m) => m.SignUpComponent
-      ),
+      import('@auth/sign-up/sign-up.component').then(m => m.SignUpComponent),
   },
   {
     path: '',
@@ -31,21 +29,21 @@ export const routes: Routes = [
         path: 'articles',
         loadComponent: () =>
           import('@articles/articles-page/articles.component').then(
-            (m) => m.ArticlesComponent
+            m => m.ArticlesComponent
           ),
       },
       {
         path: 'projects',
         loadComponent: () =>
           import('@project/projects-page/projects.component').then(
-            (m) => m.ProjectsComponent
+            m => m.ProjectsComponent
           ),
       },
       {
         path: 'thesis',
         loadComponent: () =>
           import('./domains/thesis/pages/thesis-page/thesis.component').then(
-            (m) => m.ThesisComponent
+            m => m.ThesisComponent
           ),
       },
     ],

@@ -1,41 +1,42 @@
 /* estilos del sidenav con angular material*/
-mat-toolbar{
-    background-color: var(--mat-nav-var) !important;
-    position: relative;
-    z-index: 5;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    >h1{
-        color: var(--mat-amarillo-institucional) !important;
-        font-size: 20px;
-        font-weight: bold;   
-   }
-}
-mat-icon{
+mat-toolbar {
+  background-color: var(--mat-nav-var) !important;
+  position: relative;
+  z-index: 5;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  > h1 {
     color: var(--mat-amarillo-institucional) !important;
-    font-size: 30px;
+    font-size: 20px;
+    font-weight: bold;
+  }
+}
+mat-icon {
+  color: var(--mat-amarillo-institucional) !important;
+  font-size: 30px;
 }
 .content {
-    padding: 24px;
+  padding: 24px;
 }
 
 mat-sidenav-container {
-    height: calc(100vh - 64px);
+  height: calc(100vh - 64px);
 }
 mat-sidenav {
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-    border-radius: 0px !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  border-radius: 0px !important;
 }
 
-mat-sidenav, mat-sidenav-content {
-    transition: all 100ms ease-in-out;
-  }
+mat-sidenav,
+mat-sidenav-content {
+  transition: all 100ms ease-in-out;
+}
 
 .spinner-container {
-    display: grid;
-    place-content: center;
-    height: 100vh;
+  display: grid;
+  place-content: center;
+  height: 100vh;
 
-    > mat-spinner {
-        transform: translateY(-2.1rem);
-    }
+  > mat-spinner {
+    transform: translateY(-2.1rem);
+  }
 }

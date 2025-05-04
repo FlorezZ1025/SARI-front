@@ -13,7 +13,7 @@ import { CustomValidators } from '@config/custom-validations';
 import { HotToastService } from '@ngneat/hot-toast';
 
 @Component({
-  selector: 'sign-up',
+  selector: 'app-sign-up',
   standalone: true,
   imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './sign-up.component.html',
@@ -92,7 +92,7 @@ export class SignUpComponent {
   });
 
   constructor(private _router: Router) {
-    this.registerForm.valueChanges.subscribe((value) => {
+    this.registerForm.valueChanges.subscribe(value => {
       Object.assign(this.user, value);
     });
   }
@@ -101,7 +101,7 @@ export class SignUpComponent {
     this._authService
       .doRegister(this.user as User)
       .pipe(
-        tap((response) => {
+        tap(response => {
           if (response.statusCode === 201) {
             this._toast.success('Usuario registrado correctamente', {
               style: {

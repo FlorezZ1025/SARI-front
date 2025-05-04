@@ -1,5 +1,5 @@
 export interface CreateArticleResponse {
-    message: string;
-    statusCode: number;
-    idArticle?: string;
+  message: string;
+  statusCode: number;
+  idArticle?: string;
 }

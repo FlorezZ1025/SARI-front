@@ -1,26 +1,31 @@
-import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import {
+  HttpEvent,
+  HttpHandler,
+  HttpInterceptor,
+  HttpRequest,
+} from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { last, Observable } from 'rxjs';
-import { LoginRequest } from '@core/interfaces/login-request.interface';
+import { Observable } from 'rxjs';
 import { AuthService } from '@auth/services/auth.service';
 
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
-
-  constructor() { }
-
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  intercept(
+    req: HttpRequest<any>,
+    next: HttpHandler
+  ): Observable<HttpEvent<any>> {
     // console.log('Interceptando la peticion: ', req.url);
-    let cloneReq = req.clone()
+    let cloneReq = req.clone();
 
-    if(!req.url.includes('login') || !req.url.includes('register')){
+    if (!req.url.includes('login') || !req.url.includes('register')) {
       cloneReq = req.clone({
-        setHeaders: { 
+        setHeaders: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${AuthService.token}`,
           'ngrok-skip-browser-warning': 'true',
-        }
-      })
+        },
+      });
     }
     return next.handle(cloneReq);
   }

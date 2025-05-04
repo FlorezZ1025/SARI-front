@@ -10,9 +10,8 @@ import { AuthService } from '@auth/services/auth.service';
 import { LoginRequest } from '@core/interfaces/login-request.interface';
 import { HotToastService } from '@ngneat/hot-toast';
 
-
 @Component({
-  selector: 'sign-in',
+  selector: 'app-sign-in',
   standalone: true,
   imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './sign-in.component.html',
@@ -45,32 +44,30 @@ export class SignInComponent {
       this._router.navigate(['/']);
     }
 
-    this.loginForm.valueChanges.subscribe((value) => {
+    this.loginForm.valueChanges.subscribe(value => {
       Object.assign(this.loginRequest, value);
     });
   }
 
   login() {
-    this._authService.doLogin(this.loginRequest).subscribe((response) => {
+    this._authService.doLogin(this.loginRequest).subscribe(response => {
       if (response.statusCode === 200) {
         this._toast.success('Bienvenido a SARI', {
-          style:{
+          style: {
             border: '2px solid #4CAF50',
             padding: '20px',
             fontSize: '20px',
-          }
+          },
         });
         this._router.navigate(['/home']);
       } else {
-        this._toast.error(response.message,
-          {
-            style:{
-              border: '2px solid #F44336',
-              padding: '20px',
-              fontSize: '20px',
-            }
-          }
-        );
+        this._toast.error(response.message, {
+          style: {
+            border: '2px solid #F44336',
+            padding: '20px',
+            fontSize: '20px',
+          },
+        });
       }
     });
   }

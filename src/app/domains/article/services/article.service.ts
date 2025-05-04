@@ -20,7 +20,10 @@ export class ArticleService {
     this.articleSubject.asObservable();
   public currentArticles = toSignal(this.articles$);
 
-  constructor(private _client: HttpClient, private _authService: AuthService) {
+  constructor(
+    private _client: HttpClient,
+    private _authService: AuthService
+  ) {
     this._authService.currentUser$.subscribe(() => {
       console.log('User changed:', this._authService.currentUser()?.name);
       if (AuthService.token === '') {
@@ -42,30 +45,28 @@ export class ArticleService {
   public deleteArticle(id: string): Observable<ArticlesResponse> {
     const url = `${this.url}/articles/delete`;
     const data = { id: id };
-    return this._client.post(url, data).pipe(
+    return this._client.post<ArticlesResponse>(url, data).pipe(
       map(
-        (response: any) =>
+        response =>
           ({
             message: response.message,
             statusCode: response.statusCode,
-          } as ArticlesResponse)
+          }) as ArticlesResponse
       ),
       tap(() => {
         const articles = this.getArticlesFromLocalStorage();
-        const filteredArticles = articles.filter(
-          (article) => article.id !== id
-        );
+        const filteredArticles = articles.filter(article => article.id !== id);
         this.setArticlesInLocalStorage(filteredArticles);
         console.log('Article deleted in local storage');
       }),
-      catchError((error) =>
+      catchError(error =>
         of(error).pipe(
           map(
-            (error) =>
+            error =>
               ({
                 message: error.error.message || 'Error al eliminar el articulo',
                 statusCode: error.status || 500,
-              } as ArticlesResponse)
+              }) as ArticlesResponse
           )
         )
       )
@@ -75,17 +76,17 @@ export class ArticleService {
   public editArticle(article: ArticleItem): Observable<ArticlesResponse> {
     const url = `${this.url}/articles/update`;
     const data = article;
-    return this._client.post(url, data).pipe(
+    return this._client.post<ArticlesResponse>(url, data).pipe(
       map(
-        (response:any) =>
+        response =>
           ({
             message: response.message,
             statusCode: response.statusCode,
-          } as ArticlesResponse)
+          }) as ArticlesResponse
       ),
       tap(() => {
         const articles = this.getArticlesFromLocalStorage();
-        articles.map((art) => {
+        articles.map(art => {
           if (art.id === article.id) {
             art.title = article.title;
             art.authors = article.authors;
@@ -98,15 +99,15 @@ export class ArticleService {
         this.setArticlesInLocalStorage(articles);
         console.log('Article edited in local storage');
       }),
-      catchError((error) =>
+      catchError(error =>
         of(error).pipe(
-          tap((error) => console.error('Error:', error)),
+          tap(error => console.error('Error:', error)),
           map(
-            (error) =>
+            error =>
               ({
                 message: error.error.message || 'Error al editar el articulo',
                 statusCode: error.status || 500,
-              } as ArticlesResponse)
+              }) as ArticlesResponse
           )
         )
       )
@@ -126,13 +127,13 @@ export class ArticleService {
 
   public getArticlesFromDB(): Observable<ArticleItem[]> {
     const url = `${this.url}/articles/get_all`;
-    return this._client.get(url).pipe(
-      map((response: any) => {
-        const articles = response.data || [];
+    return this._client.get<ArticleItem[]>(url).pipe(
+      map(responseArticles => {
+        const articles = responseArticles;
         this.setArticlesInLocalStorage(articles);
         return articles;
       }),
-      catchError((error) => of(error))
+      catchError(error => of(error))
     );
   }
 
@@ -159,16 +160,16 @@ export class ArticleService {
     const url = `${this.url}/articles/create`;
     const data = article;
 
-    return this._client.post(url, data).pipe(
+    return this._client.post<CreateArticleResponse>(url, data).pipe(
       map(
-        (response: any) =>
+        response =>
           ({
             message: response.message,
             statusCode: response.statusCode,
             idArticle: response.idArticle,
-          } as CreateArticleResponse)
+          }) as CreateArticleResponse
       ),
-      tap((response) => {
+      tap(response => {
         const new_article: ArticleItem = {
           id: response.idArticle,
           title: article.title,
@@ -179,15 +180,15 @@ export class ArticleService {
         this.createArticleInLocalStorage(new_article);
         console.log('Article created in local storage');
       }),
-      catchError((error) =>
+      catchError(error =>
         of(error).pipe(
-          tap((error) => console.error('Error:', error)),
+          tap(error => console.error('Error:', error)),
           map(
-            (error) =>
+            error =>
               ({
                 message: error.error.message || 'Error al crear el articulo',
                 statusCode: error.status || 500,
-              } as CreateArticleResponse)
+              }) as CreateArticleResponse
           )
         )
       )
@@ -199,13 +200,14 @@ export class ArticleService {
     const data = { fullname: fullSepName };
 
     return this._client.post<ArticlesResponse>(url, data).pipe(
-      map((response:any) => ({
-        articles: response.data || [],
+      map(response => ({
+        //cambiar de data a articles
+        articles: response.articles,
         message: response.message,
         statusCode: response.statusCode,
       })),
-      tap((response) => this.updateLocalStorage(response.articles)),
-      catchError((error) => {
+      tap(response => this.updateLocalStorage(response.articles)),
+      catchError(error => {
         console.error('Error:', error);
         return of({
           message: error.error?.message || 'Error al obtener los artículos',
@@ -215,7 +217,7 @@ export class ArticleService {
       })
     );
   }
-  
+
   private updateLocalStorage(pureArticles: ArticleItem[] = []) {
     const currentArticles = this.getArticlesFromLocalStorage();
 
@@ -224,9 +226,9 @@ export class ArticleService {
       return;
     }
 
-    const existingIds = currentArticles.map((art) => art.id);
+    const existingIds = currentArticles.map(art => art.id);
     const newArticles = pureArticles.filter(
-      (article) => !existingIds.includes(article.id)
+      article => !existingIds.includes(article.id)
     );
 
     if (newArticles.length > 0) {

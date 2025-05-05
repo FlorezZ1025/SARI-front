@@ -1,11 +1,14 @@
 <div class="projects-page-container">
   <div class="header-section">
-    <h1>Tus Proyectos</h1>
-    <div class="article-options">
-      <button mat-fab (click)="createproject()">Agregrar Proyecto</button>
-      <button mat-fab (click)="extractProjectFromPure()">
+    <h1>Tus proyectos</h1>
+    <div class="project-options">
+      <button mat-fab (click)="createProject()" [disabled]="loading$">
+        Agregrar Proyecto
+      </button>
+      <button mat-fab (click)="extractprojectsFromPure()" [disabled]="loading$">
         Importar de PURE
       </button>
     </div>
   </div>
+  <div class="all-projects">oe</div>
 </div>

@@ -11,29 +11,20 @@
   --mat-negro-intenso: #1e1e1e;
   --mat-nav-var: #181727;
 }
-
 .mat-mdc-button {
   --mdc-theme-primary: var(--mat-primary);
   --mdc-theme-secondary: var(--mat-accent);
   --mdc-theme-error: var(--mat-warn);
   border-radius: 0px;
 }
-
 body {
   margin: 0;
-
-  /* height: 100vh; */
-  font-family: sans-serif;
+  font-family: Arial, sans-serif;
 }
-
 html,
 body {
   height: 100%;
   background: var(--mat-gris-claro);
-}
-body {
-  margin: 0;
-  font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
 @keyframes loader {
   0%,
@@ -45,7 +36,6 @@ body {
     box-shadow: 0 2.5em 0 0;
   }
 }
-
 @keyframes show {
   from {
     opacity: 0;

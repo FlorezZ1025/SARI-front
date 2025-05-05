@@ -1,0 +1,52 @@
+@let articleData = article();
+<div class="card">
+  @switch (articleData.state) {
+    @case ('escritura') {
+      <span class="badge writing">{{ articleData.state }}</span>
+    }
+    @case ('publicado') {
+      <span class="badge published">{{ articleData.state }}</span>
+    }
+    @case ('sometido') {
+      <span class="badge submitted">{{ articleData.state }}</span>
+    }
+    @default {
+      <span class="badge accepted">{{ articleData.state }}</span>
+    }
+  }
+  <div class="article-item-options">
+    @if (
+      articleData.hyperlink === 'No disponible' &&
+      articleData.state === 'publicado'
+    ) {
+      <button mat-icon-button (click)="editArticle(articleData)">
+        <mat-icon>edit</mat-icon>
+      </button>
+    } @else if (articleData.state !== 'publicado') {
+      <button mat-icon-button (click)="editArticle(articleData)">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button (click)="deleteArticle(articleData)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    }
+  </div>
+  <h3>{{ articleData.title }}</h3>
+  <ul>
+    @for (author of articleData.authors; track author) {
+      <li>
+        <p>{{ author }}</p>
+      </li>
+    }
+  </ul>
+  <small>{{ articleData.date }}</small>
+  @if (articleData.state === 'publicado') {
+    @if (articleData.hyperlink === 'No disponible') {
+      <small>No disponible</small>
+    } @else {
+      <small
+        ><a [href]="articleData.hyperlink" target="_blank">Enlace Doi</a></small
+      >
+    }
+  }
+</div>

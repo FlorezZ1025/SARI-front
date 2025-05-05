@@ -11,12 +11,17 @@ import { ModalService } from '@core/services/modal.service';
 import { CreateArticleModalComponent } from '@articles/components/create-article-modal/article-modal.component';
 import { ArticleGroup } from '@core/interfaces/article-group.interface';
 import { HotToastService } from '@ngneat/hot-toast';
-import { EditArticleModalComponent } from '@articles/components/edit-article-modal/edit-article-modal.component';
+import { ArticleListComponent } from '../components/article-list/article-list.component';
 
 @Component({
   selector: 'app-articles',
   standalone: true,
-  imports: [MatButtonModule, MatProgressSpinnerModule, MatIcon],
+  imports: [
+    MatButtonModule,
+    MatProgressSpinnerModule,
+    MatIcon,
+    ArticleListComponent,
+  ],
   templateUrl: './articles.component.html',
   styleUrl: './articles.component.css',
 })
@@ -60,8 +65,6 @@ export class ArticlesComponent implements OnInit {
           this._toast.error('Error cargando artículos', {
             style: {
               border: '2px solid #f44336',
-              // padding: '20px',
-              // fontSize: '20px',
             },
           });
         },
@@ -123,33 +126,5 @@ export class ArticlesComponent implements OnInit {
           });
         }
       });
-  }
-
-  deleteArticle(article: ArticleItem): void {
-    this._articleService.deleteArticle(article.id || '').subscribe(response => {
-      if (response.statusCode === 200) {
-        this._toast.success('Artículo eliminado correctamente', {
-          style: {
-            border: '2px solid #4caf50',
-            padding: '20px',
-            fontSize: '20px',
-          },
-        });
-      } else {
-        this._toast.error(response.message, {
-          style: {
-            border: '2px solid #f44336',
-            padding: '20px',
-            fontSize: '20px',
-          },
-        });
-      }
-    });
-  }
-  editArticle(article: ArticleItem) {
-    this._modalSvc.openModal<EditArticleModalComponent, ArticleItem>(
-      EditArticleModalComponent,
-      article
-    );
   }
 }

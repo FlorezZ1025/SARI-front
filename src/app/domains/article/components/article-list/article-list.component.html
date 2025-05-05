@@ -1,0 +1,14 @@
+@let articlesData = articles();
+<div class="year-cards">
+  @for (article of articlesData; track $index) {
+    @defer (on viewport) {
+      <app-article-card [article]="article" />
+    } @placeholder {
+      <div class="card-placeholder"></div>
+    } @loading (minimum 1000ms) {
+      <div class="card-loader">
+        <mat-spinner></mat-spinner>
+      </div>
+    }
+  }
+</div>

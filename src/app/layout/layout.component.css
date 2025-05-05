@@ -4,10 +4,11 @@ mat-toolbar {
   position: relative;
   z-index: 5;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-  > h1 {
-    color: var(--mat-amarillo-institucional) !important;
-    font-size: 20px;
-    font-weight: bold;
+  > h5 {
+    margin-top: 0.5em;
+    margin-left: 1em;
+    color: var(--mat-amarillo-institucional);
+    font-size: 16px;
   }
 }
 mat-icon {

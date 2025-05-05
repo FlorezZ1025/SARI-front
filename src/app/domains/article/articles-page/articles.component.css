@@ -1,46 +1,31 @@
 .articles-page-container {
   display: flex;
+  flex-direction: column;
   min-height: 100dvh;
   width: 100%;
-  /* background-color: red; */
+  align-items: center;
 }
 
 .articles-page-container {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: white;
-  /* background-color: var(--mat-warn); */
-  color: white;
-  display: flex;
 }
 
-.main-content {
-  flex-grow: 1;
-  padding: 20px;
-}
-
-.sysmtem-overview {
-  min-height: 100dvh;
-  height: 100%;
-  overflow-y: auto;
-}
-
-.system-overview h1 {
-  margin-top: 20px;
-  color: var(--mat-text);
-}
 .header-section {
+  margin-top: 0.5em;
   display: flex;
   justify-content: space-between;
-  /* align-items: center;  */
   margin-bottom: 20px;
-  width: 100%;
+  width: 90%;
 }
+.header-section h1 {
+  font-size: 1.8rem;
+  color: var(--mat-text);
+
+}
+
 .article-options {
   width: 25%;
   display: flex;
-  justify-content: center;
-  align-items: center;
   /* margin-right: 60px; */
   > button {
     background-color: var(--mat-rojo-institucional);
@@ -60,6 +45,7 @@
   display: flex;
   /* align-items: center;
     justify-content: center; */
+  width: 95%;
   flex-direction: column;
 }
 .mini-container {
@@ -67,15 +53,7 @@
   background-color: #2196f3;
   display: flex;
 }
-.year-cards {
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  margin: 0 auto;
-  flex-wrap: wrap;
-  place-content: center;
-  gap: 20px;
-}
+
 /*Animacion*/
 .card {
   /* transition: all 2s ease-in-out; */
@@ -129,40 +107,9 @@
   background-color: #ff9800;
 }
 
-.article-item-options {
-  position: absolute;
-  bottom: 1px;
-  right: 5px;
-  display: flex;
-  gap: 0;
-}
 
-.card h3 {
-  margin-top: 25px;
-  color: #060606;
-  word-wrap: break-word;
-  font-size: medium;
-}
 
-.card p {
-  color: #616161;
-  font-size: 10px;
-  font-weight: bold;
-  text-transform: capitalize;
-}
 
-.card small {
-  margin-top: 5px;
-  margin-bottom: 20px;
-  color: #36383a;
-  word-wrap: break-word;
-  font-size: 8px;
-
-  > a {
-    color: #4c4e51;
-    text-decoration: none;
-  }
-}
 .empty-state {
   display: flex;
   flex-direction: column;
@@ -177,7 +124,8 @@
 }
 
 .loader-container {
-  position: fixed;
+  /* position: fixed; */
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;

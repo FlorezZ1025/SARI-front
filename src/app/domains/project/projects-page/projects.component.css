@@ -1,0 +1,39 @@
+.projects-page-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+    width: 100%;
+    align-items: center;
+}
+
+.header-section {
+    margin-top: 0.5em;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    width: 90%;
+}
+
+.header-section h1 {
+    font-size: 1.8rem;
+    color: var(--mat-text);
+}
+
+.project-options {
+    width: 25%;
+    display: flex;
+
+    /* margin-right: 60px; */
+    >button {
+        background-color: var(--mat-rojo-institucional);
+        font-size: 0.6lh;
+        color: white;
+        padding: 2rem;
+        margin-right: 10px;
+        width: 45%;
+    }
+}
+
+.all-projects{
+    color: black;
+}

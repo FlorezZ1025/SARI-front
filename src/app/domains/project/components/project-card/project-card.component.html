@@ -1,5 +1,8 @@
 @let projectData = project();
 <div class="card">
+  <div class="badge">
+    <span>{{ projectData.status }}</span>
+  </div>
   <div class="project-item-options">
     <button mat-icon-button (click)="editProject(projectData)">
       <mat-icon>edit</mat-icon>
@@ -16,5 +19,8 @@
       </li>
     }
   </ul>
-  <small>{{ projectData.date }}</small>
+  <div style="display: flex; flex-direction: column">
+    <small>Fecha de sometido</small>
+    <small>{{ projectData.date }}</small>
+  </div>
 </div>

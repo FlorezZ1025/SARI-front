@@ -1,0 +1,26 @@
+.card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--mat-gris-claro);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 1.2);   
+    height: 100%;
+    /* width: 20%; */
+    justify-content: space-between;
+    text-align: center;
+    position: relative;
+    color: #616161;
+    font-size: 1rem;
+    font-weight: bold;
+    border: 2px solid var(--mat-gris-claro);
+}
+.project-item-options {
+    position: absolute;
+    display: flex;
+    /* justify-content: space-between; */
+    bottom: 1px;
+    right: -10px;
+    width: 100%;
+    margin-top: 10px;
+}

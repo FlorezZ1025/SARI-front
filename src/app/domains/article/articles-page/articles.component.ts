@@ -11,7 +11,7 @@ import { ModalService } from '@core/services/modal.service';
 import { CreateArticleModalComponent } from '@articles/components/create-article-modal/article-modal.component';
 import { ArticleGroup } from '@core/interfaces/article-group.interface';
 import { HotToastService } from '@ngneat/hot-toast';
-import { ArticleListComponent } from '../components/article-list/article-list.component';
+import { ArticleListComponent } from '@articles/components/article-list/article-list.component';
 
 @Component({
   selector: 'app-articles',
@@ -27,8 +27,6 @@ import { ArticleListComponent } from '../components/article-list/article-list.co
 })
 export class ArticlesComponent implements OnInit {
   user: Signal<User | null | undefined>;
-  fullName: string;
-  separatedFullName: string;
   loading$ = false;
   articles: ArticleItem[] = [];
   groupedArticles: ArticleGroup[] = [];
@@ -39,13 +37,9 @@ export class ArticlesComponent implements OnInit {
   private _authService = inject(AuthService);
   private _articleService = inject(ArticleService);
   private _loaderService = inject(LoaderService);
-  oe = '';
 
   constructor() {
     this.user = this._authService.currentUser;
-
-    this.fullName = `${this.user()?.name} ${this.user()?.lastName}`;
-    this.separatedFullName = this.fullName.toLowerCase().split(' ').join('-');
 
     this._articleService.articles$.subscribe(() => {
       this.articles = this._articleService.getCurrentArticles();
@@ -60,7 +54,6 @@ export class ArticlesComponent implements OnInit {
   ngOnInit(): void {
     if (this._articleService.getCurrentArticles().length === 0) {
       this._articleService.loadArticlesOnStart().subscribe({
-        // next: () => {},
         error: () => {
           this._toast.error('Error cargando artículos', {
             style: {
@@ -104,27 +97,24 @@ export class ArticlesComponent implements OnInit {
   }
 
   extractArticleFromPure(): void {
-    console.log('entrando con el nombre: ', this.separatedFullName);
-    this._articleService
-      .getPureArticles(this.separatedFullName)
-      .subscribe(response => {
-        if (response.statusCode === 200) {
-          this._toast.success('Articulos extraidos correctamente', {
-            style: {
-              border: '2px solid #4caf50',
-              padding: '20px',
-              fontSize: '20px',
-            },
-          });
-        } else {
-          this._toast.error('Error extrayendo' + ' inténtalo más tarde', {
-            style: {
-              border: '2px solid #f44336',
-              padding: '20px',
-              fontSize: '20px',
-            },
-          });
-        }
-      });
+    this._articleService.getPureArticles().subscribe(response => {
+      if (response.statusCode === 200) {
+        this._toast.success('Articulos extraidos correctamente', {
+          style: {
+            border: '2px solid #4caf50',
+            padding: '20px',
+            fontSize: '20px',
+          },
+        });
+      } else {
+        this._toast.error('Error extrayendo' + ' inténtalo más tarde', {
+          style: {
+            border: '2px solid #f44336',
+            padding: '20px',
+            fontSize: '20px',
+          },
+        });
+      }
+    });
   }
 }

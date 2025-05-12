@@ -147,7 +147,7 @@ export class ArticleService {
     return articles ? JSON.parse(articles) : [];
   }
 
-  public createArticleInLocalStorage(article: ArticleItem): void {
+  private createArticleInLocalStorage(article: ArticleItem): void {
     const articles = this.getArticlesFromLocalStorage();
     articles.push(article);
     localStorage.setItem(`articles ${this._userId}`, JSON.stringify(articles));
@@ -155,27 +155,23 @@ export class ArticleService {
   }
 
   public createArticle(
-    article: ArticleItem
+    articleData: FormData
   ): Observable<CreateArticleResponse> {
     const url = `${this.url}/articles/create`;
-    const data = article;
 
-    return this._client.post<CreateArticleResponse>(url, data).pipe(
-      map(
-        response =>
-          ({
-            message: response.message,
-            statusCode: response.statusCode,
-            idArticle: response.idArticle,
-          }) as CreateArticleResponse
-      ),
+    return this._client.post<CreateArticleResponse>(url, articleData).pipe(
+      tap(response => {
+        console.log('Article created in DB');
+        console.log(response);
+      }),
       tap(response => {
         const new_article: ArticleItem = {
           id: response.idArticle,
-          title: article.title,
-          authors: article.authors,
-          date: article.date,
-          state: article.state,
+          title: articleData.get('title') as string,
+          authors: JSON.parse(articleData.get('authors') as string),
+          date: articleData.get('date') as string,
+          state: articleData.get('state') as string,
+          evidenceUrl: response.pdfUrl,
         };
         this.createArticleInLocalStorage(new_article);
         console.log('Article created in local storage');
@@ -195,13 +191,13 @@ export class ArticleService {
     );
   }
 
-  public getPureArticles(fullSepName: string): Observable<ArticlesResponse> {
+  public getPureArticles(): Observable<ArticlesResponse> {
     const url = `${this.url}/articles/pure_articles`;
-    const data = { fullname: fullSepName };
+    const fullName = this._authService.fullSepName;
+    const data = { fullname: fullName };
 
     return this._client.post<ArticlesResponse>(url, data).pipe(
       map(response => ({
-        //cambiar de data a articles
         articles: response.articles,
         message: response.message,
         statusCode: response.statusCode,

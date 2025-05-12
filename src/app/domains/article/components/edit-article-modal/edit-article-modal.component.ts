@@ -24,6 +24,9 @@ import { AuthService } from '@auth/services/auth.service';
 import { HotToastService } from '@ngneat/hot-toast';
 import { tap } from 'rxjs';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { LoaderService } from '@core/services/loader.service';
+import { MatIconModule } from '@angular/material/icon';
 
 const MATERIAL_MODULES = [
   MatLabel,
@@ -32,6 +35,8 @@ const MATERIAL_MODULES = [
   MatDialogContent,
   MatDatepickerModule,
   MatSelectModule,
+  MatProgressSpinnerModule,
+  MatIconModule,
   //Este no es pero los estilos se demoran en cargar
   ReactiveFormsModule,
 ];
@@ -41,7 +46,7 @@ const MATERIAL_MODULES = [
   standalone: true,
   imports: [MATERIAL_MODULES],
   templateUrl: './edit-article-modal.component.html',
-  styleUrl: './edit-article-modal.component.css',
+  styleUrl: '../create-article-modal/article-modal.component.css',
 })
 export class EditArticleModalComponent implements AfterViewInit {
   private readonly _modalSvc = inject(ModalService);
@@ -49,11 +54,17 @@ export class EditArticleModalComponent implements AfterViewInit {
   private _articleService = inject(ArticleService);
   private _authService = inject(AuthService);
   private cdr = inject(ChangeDetectorRef);
+  private _loaderService = inject(LoaderService);
+  loading$ = false;
+  fileSelected = false;
   newArticleFormBuilder = inject(FormBuilder);
 
   article: ArticleItem = inject(MAT_DIALOG_DATA).data;
   isEditing = signal(true);
   constructor() {
+    this._loaderService.loading$.subscribe(loading => {
+      this.loading$ = loading;
+    });
     this.editArticleForm.valueChanges.subscribe(() => {
       console.log(this.editArticleForm.valid);
     });
@@ -156,5 +167,17 @@ export class EditArticleModalComponent implements AfterViewInit {
         })
       )
       .subscribe();
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+
+    if (input.files && input.files.length > 0) {
+      this.fileSelected = true;
+      const file = input.files[0]; // si necesitas el archivo
+      console.log('Archivo seleccionado:', file.name);
+    } else {
+      this.fileSelected = false;
+    }
   }
 }

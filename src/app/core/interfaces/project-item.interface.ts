@@ -1,10 +1,10 @@
-export interface ArticleItem {
+export interface ProjectItem {
   id?: string;
   title: string;
+  investigators: string[];
   date: string;
-  hyperlink?: string;
-  authors: string[];
-  state?: string;
+  status: string;
+  type?: string;
   evidence?: File;
   evidenceUrl?: string;
 }

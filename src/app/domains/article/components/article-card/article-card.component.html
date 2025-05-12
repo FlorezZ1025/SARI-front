@@ -29,6 +29,13 @@
       <button mat-icon-button (click)="deleteArticle(articleData)">
         <mat-icon>delete</mat-icon>
       </button>
+      @if (articleData.evidenceUrl) {
+        <button mat-icon-button>
+          <a [href]="articleData.evidenceUrl" target="_blank"
+            ><mat-icon>picture_as_pdf</mat-icon></a
+          >
+        </button>
+      }
     }
   </div>
   <h3>{{ articleData.title }}</h3>

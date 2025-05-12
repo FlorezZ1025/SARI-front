@@ -5,10 +5,27 @@
       <button mat-fab (click)="createProject()" [disabled]="loading$">
         Agregrar Proyecto
       </button>
-      <button mat-fab (click)="extractprojectsFromPure()" [disabled]="loading$">
+      <button mat-fab (click)="extractProjectsFromPure()" [disabled]="loading$">
         Importar de PURE
       </button>
     </div>
   </div>
-  <div class="all-projects">oe</div>
+  <div class="all-projects">
+    @if (loading$) {
+      <div class="loader-container">
+        <div class="loader"></div>
+        <h3>Cargando artículos, puede tardar unos minutos...</h3>
+      </div>
+    } @else {
+      @for (project of projects; track $index) {
+        <app-project-card [project]="project" />
+      } @empty {
+        <div class="empty-state">
+          <mat-icon>article</mat-icon>
+          <h3>No hay proyectos disponibles</h3>
+          <p>Agrega un proyecto para comenzar a ver tus publicaciones.</p>
+        </div>
+      }
+    }
+  </div>
 </div>

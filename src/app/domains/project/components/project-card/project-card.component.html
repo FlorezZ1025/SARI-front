@@ -1,0 +1,20 @@
+@let projectData = project();
+<div class="card">
+  <div class="project-item-options">
+    <button mat-icon-button (click)="editProject(projectData)">
+      <mat-icon>edit</mat-icon>
+    </button>
+    <button mat-icon-button (click)="deleteProject(projectData)">
+      <mat-icon>delete</mat-icon>
+    </button>
+  </div>
+  <h3>{{ projectData.title }}</h3>
+  <ul>
+    @for (investigator of projectData.investigators; track $index) {
+      <li>
+        <p>{{ investigator }}</p>
+      </li>
+    }
+  </ul>
+  <small>{{ projectData.date }}</small>
+</div>

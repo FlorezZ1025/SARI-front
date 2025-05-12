@@ -24,7 +24,16 @@
         type="submit"
         color="primary"
         [disabled]="this.addHyperlinkForm.invalid">
-        Agregar
+        @if (loading$) {
+          <mat-spinner
+            class="custom-spinner"
+            diameter="20"
+            color="primary"
+            mode="indeterminate">
+          </mat-spinner>
+        } @else {
+          Agregar hyperlink
+        }
       </button>
     </div>
   </form>
@@ -60,7 +69,25 @@
           </mat-select>
         </mat-form-field>
       </div>
-      <div>
+      @let articleState = this.editArticleForm.get('state')?.value;
+      @if (articleState === 'sometido' || articleState === 'aceptado') {
+        <div class="row file-evidence full-width">
+          @if (!fileSelected) {
+            <mat-icon color="primary">description</mat-icon>
+            <mat-label>Adjuntar evidencia</mat-label>
+          } @else {
+            <mat-icon>check</mat-icon>
+            <mat-label>¡Archivo Adjuntado!</mat-label>
+          }
+          <input
+            type="file"
+            placeholder="Ingresa un PDF"
+            accept=".pdf"
+            (change)="onFileSelected($event)"
+            required />
+        </div>
+      }
+      <div class="row">
         <mat-form-field class="full-width" appearence="outline">
           <mat-label>Fecha de inicio del artículo</mat-label>
           <input matInput [matDatepicker]="picker" formControlName="date" />
@@ -78,7 +105,16 @@
         mat-button
         color="primary"
         [disabled]="this.editArticleForm.invalid">
-        Editar
+        @if (loading$) {
+          <mat-spinner
+            class="custom-spinner"
+            diameter="20"
+            color="accent"
+            mode="indeterminate">
+          </mat-spinner>
+        } @else {
+          Editar
+        }
       </button>
     </div>
   </form>

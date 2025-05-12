@@ -17,16 +17,20 @@
 }
 
 form .content {
+  margin-top: 1em;
   display: flex;
   flex-direction: column;
-  flex-wrap: wrap;
-  align-content: center;
+  justify-content: center;
+  align-items: center;
   gap: 20px;
   width: 100%;
   height: 100%;
   padding: 20px;
 
   > .row {
+    display: flex;
+    justify-content: center;
+    
     width: 80%;
   }
 }
@@ -52,5 +56,29 @@ form .content {
     &:hover {
       background-color: #3a3c3f;
     }
+  }
+}
+.file-evidence {
+  margin-top: -20px;
+  padding: 1.1em 0 1.1em 0;
+  position:relative;
+  border-radius:10px;
+  display:flex;
+  flex-direction: column;
+  justify-content:center;
+  align-items:center;
+  border: 3px solid #7c6464;
+  border-radius: 5px 5px 0 0;
+  cursor: pointer;
+
+  > input {
+    cursor: pointer;
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    opacity:0;
+
   }
 }

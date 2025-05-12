@@ -48,6 +48,15 @@ export class AuthService {
   public static get token(): string {
     return localStorage.getItem('token') || '';
   }
+  public get fullName(): string {
+    const user = this.getCurrentUser();
+    return user ? `${user.name} ${user.lastName}` : '';
+  }
+  public get fullSepName(): string {
+    const fullName = this.fullName;
+    const fullSepName = fullName.replace(/\s+/g, '-');
+    return fullSepName;
+  }
 
   decodeToken(token: string) {
     try {

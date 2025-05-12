@@ -11,7 +11,6 @@
     font-weight: bold;
     text-transform: capitalize;
 }
-
 .card small {
     margin-top: 5px;
     margin-bottom: 20px;
@@ -24,7 +23,6 @@
         text-decoration: none;
     }
 }
-
 .card {
     view-timeline-name: --reveal;
     animation: show;
@@ -32,7 +30,6 @@
     animation-timeline: --reveal;
     animation-range: entry 5% cover 20%;
 }
-
 .card {
     position: relative;
     background-color: var(--mat-gris-claro);
@@ -52,7 +49,6 @@
         color: #616161;
     }
 }
-
 .card .badge {
     text-transform: capitalize;
     position: absolute;

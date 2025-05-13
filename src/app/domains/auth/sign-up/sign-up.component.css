@@ -1,26 +1,38 @@
 small {
   color: #f91212;
   z-index: 1;
-  font-size: 0.2rem;
-  /* color: #fefcfc; */
+  font-size: 0.8em;
 }
+
 .auth-form-container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 97vh;
   width: 100%;
+  position: relative;
 }
+.logo {
+  position: absolute;
+  filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
+  z-index: 1;
+  width: 10%;
+  top: 0;
+  left: 0;
+}
+
 .inputs-register-form {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
 
   column-gap: 7%;
 }
+
 .register-element {
   margin: 10px;
   max-width: 50rem;
 }
+
 /* From Uiverse.io by mahiatlinux */
 .form {
   display: flex;
@@ -51,7 +63,7 @@ small {
   margin: 0.2rem;
 }
 
-.flex-column > label {
+.flex-column>label {
   color: #f1f1f1;
   font-weight: 600;
 }
@@ -94,7 +106,7 @@ small {
   justify-content: space-between;
 }
 
-.flex-row > div > label {
+.flex-row>div>label {
   font-size: 14px;
   color: #f1f1f1;
   font-weight: 400;
@@ -126,6 +138,12 @@ small {
   color: #f1f1f1;
   font-size: 14px;
   margin: 5px 0;
+
+  >span a {
+    color: #2d79f3;
+    font-weight: 500;
+    text-decoration: none;
+  }
 }
 
 .btn {
@@ -153,7 +171,8 @@ small {
   padding-left: 10px;
   color: #f9f8f8;
   font-size: larger;
-  appearance: none; /* Oculta el estilo por defecto */
+  appearance: none;
+  /* Oculta el estilo por defecto */
   -webkit-appearance: none;
   -moz-appearance: none;
   /* background-color: white; */
@@ -165,9 +184,11 @@ small {
   outline: none;
   width: 92%;
 }
+
 .select-form:hover {
   border-color: #2980b9;
 }
+
 .select-form::after {
   content: '▼';
 
@@ -178,6 +199,7 @@ small {
   pointer-events: none;
   color: #000;
 }
+
 option {
   color: #aaa;
 }

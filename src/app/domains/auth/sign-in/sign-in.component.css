@@ -8,6 +8,8 @@ img {
   filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
   transform: translateY(-21px);
   z-index: 1;
+  width: 10%;
+  /* height: 20%; */
 }
 
 .auth-form-container {
@@ -129,6 +131,11 @@ img {
   color: #f1f1f1;
   font-size: 14px;
   margin: 5px 0;
+  > span a {
+    color: #2d79f3;
+    font-weight: 500;
+    text-decoration: none;
+  }
 }
 
 .btn {

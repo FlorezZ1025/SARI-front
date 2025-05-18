@@ -16,8 +16,9 @@
   }
   <div class="article-item-options">
     @if (
-      articleData.hyperlink === 'No disponible' &&
-      articleData.state === 'publicado'
+      (articleData.hyperlink === 'No disponible' &&
+        articleData.state === 'publicado') ||
+      articleData.editedLink
     ) {
       <button mat-icon-button (click)="editArticle(articleData)">
         <mat-icon>edit</mat-icon>

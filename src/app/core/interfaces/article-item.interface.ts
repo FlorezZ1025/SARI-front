@@ -7,4 +7,5 @@ export interface ArticleItem {
   state?: string;
   evidence?: File;
   evidenceUrl?: string;
+  editedLink?: boolean;
 }

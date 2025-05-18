@@ -25,12 +25,7 @@
         color="primary"
         [disabled]="this.addHyperlinkForm.invalid">
         @if (loading$) {
-          <mat-spinner
-            class="custom-spinner"
-            diameter="20"
-            color="primary"
-            mode="indeterminate">
-          </mat-spinner>
+          Agregando...
         } @else {
           Agregar hyperlink
         }

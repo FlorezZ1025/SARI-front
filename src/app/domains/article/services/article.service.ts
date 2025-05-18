@@ -240,6 +240,7 @@ export class ArticleService {
         const articleToUpdate = articles.find(art => art.id === articleId);
         if (articleToUpdate) {
           articleToUpdate.hyperlink = hyperlink;
+          articleToUpdate.editedLink = true;
           this.setArticlesInLocalStorage(articles);
         }
       }),

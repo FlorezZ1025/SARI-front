@@ -102,16 +102,12 @@ export class ArticlesComponent implements OnInit {
         this._toast.success('Articulos extraidos correctamente', {
           style: {
             border: '2px solid #4caf50',
-            padding: '20px',
-            fontSize: '20px',
           },
         });
       } else {
         this._toast.error('Error extrayendo' + ' inténtalo más tarde', {
           style: {
             border: '2px solid #f44336',
-            padding: '20px',
-            fontSize: '20px',
           },
         });
       }

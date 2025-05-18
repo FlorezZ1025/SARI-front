@@ -61,6 +61,7 @@ export class EditArticleModalComponent implements AfterViewInit {
 
   article: ArticleItem = inject(MAT_DIALOG_DATA).data;
   isEditing = signal(true);
+  fileData: FormData = new FormData();
   constructor() {
     this._loaderService.loading$.subscribe(loading => {
       this.loading$ = loading;
@@ -88,6 +89,7 @@ export class EditArticleModalComponent implements AfterViewInit {
       this.article.authors.join(','),
       {
         validators: [
+          Validators.maxLength(100),
           Validators.pattern('^[A-Za-zÁÉÍÓÚÜáéíóúüñÑ\\s\\,]+$'),
           Validators.minLength(5),
         ],
@@ -111,8 +113,6 @@ export class EditArticleModalComponent implements AfterViewInit {
         next: () => {
           this._toast.success('Hypervínculo agregado', {
             style: {
-              padding: '20px',
-              fontSize: '20px',
               border: '2px solid #4caf50',
             },
           });
@@ -120,8 +120,6 @@ export class EditArticleModalComponent implements AfterViewInit {
         error: () => {
           this._toast.error('Error al agregar el enlace', {
             style: {
-              padding: '20px',
-              fontSize: '20px',
               border: '2px solid #f44336',
             },
           });
@@ -130,7 +128,7 @@ export class EditArticleModalComponent implements AfterViewInit {
   }
   onSubmitEdited() {
     console.log(this.editArticleForm.value);
-    const authors = this.editArticleForm.value.authors
+    const authors: string[] = this.editArticleForm.value.authors
       .split(',')
       .map((author: string) => author.toLocaleLowerCase().trim())
       .filter((author: string) => author !== '');
@@ -142,15 +140,21 @@ export class EditArticleModalComponent implements AfterViewInit {
       date: formatDate(this.editArticleForm.value.date, 'yyyy-MM-dd', 'en-US'),
       state: this.editArticleForm.value.state,
     };
+    const formDataToSend = new FormData();
+    formDataToSend.append('id', article.id!);
+    formDataToSend.append('title', article.title);
+    formDataToSend.append('authors', JSON.stringify(article.authors)); // Si authors es un array u objeto
+    formDataToSend.append('date', article.date);
+    formDataToSend.append('state', article.state!);
+    const file = this.fileData.get('pdf');
+    formDataToSend.append('pdf', file as Blob);
     this._articleService
-      .editArticle(article)
+      .editArticle(formDataToSend)
       .pipe(
         tap(response => {
           if (response.statusCode === 200) {
             this._toast.success(response.message, {
               style: {
-                padding: '20px',
-                fontSize: '20px',
                 border: '2px solid #4caf50',
               },
             });
@@ -158,8 +162,6 @@ export class EditArticleModalComponent implements AfterViewInit {
           } else {
             this._toast.error(response.message, {
               style: {
-                padding: '20px',
-                fontSize: '20px',
                 border: '2px solid #f44336',
               },
             });
@@ -175,7 +177,7 @@ export class EditArticleModalComponent implements AfterViewInit {
     if (input.files && input.files.length > 0) {
       this.fileSelected = true;
       const file = input.files[0]; // si necesitas el archivo
-      console.log('Archivo seleccionado:', file.name);
+      this.fileData.set('pdf', file);
     } else {
       this.fileSelected = false;
     }

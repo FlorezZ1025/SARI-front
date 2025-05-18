@@ -106,12 +106,7 @@
         color="primary"
         [disabled]="this.editArticleForm.invalid">
         @if (loading$) {
-          <mat-spinner
-            class="custom-spinner"
-            diameter="20"
-            color="accent"
-            mode="indeterminate">
-          </mat-spinner>
+          Editando...
         } @else {
           Editar
         }

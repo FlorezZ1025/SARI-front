@@ -103,26 +103,22 @@ export class CreateArticleModalComponent implements AfterViewInit {
   });
 
   onSubmit(): void {
-    const authors = this.articleForm.value.authors
+    const authors: string[] = this.articleForm.value.authors
       .split(',')
       .map((author: string) => author.toLocaleLowerCase().trim())
       .filter((author: string) => author !== '');
-    const fullName = this._authService.fullName;
-    authors.push(fullName);
+    authors.push(this._authService.fullName);
     const article: ArticleItem = {
       title: this.articleForm.value.title,
       authors: authors,
-      date: this.articleForm.value.date,
+      date: formatDate(this.articleForm.value.date, 'yyyy-MM-dd', 'en-US'),
       state: this.articleForm.value.state,
     };
-    article.date = formatDate(article.date, 'yyyy-MM-dd', 'en-US');
     const formDataToSend = new FormData();
     formDataToSend.append('title', article.title);
     formDataToSend.append('authors', JSON.stringify(article.authors)); // Si authors es un array u objeto
     formDataToSend.append('date', article.date);
-    if (article.state) {
-      formDataToSend.append('state', article.state);
-    }
+    formDataToSend.append('state', article.state!);
     const file = this.fileData.get('pdf');
     formDataToSend.append('pdf', file as Blob);
     this._articleService
@@ -136,16 +132,12 @@ export class CreateArticleModalComponent implements AfterViewInit {
             this._toast.success('Artículo creado correctamente', {
               style: {
                 border: '2px solid #4caf50',
-                padding: '20px',
-                fontSize: '20px',
               },
             });
           } else {
             this._toast.error(response.message, {
               style: {
                 border: '2px solid #f44336',
-                padding: '20px',
-                fontSize: '20px',
               },
             });
           }

@@ -73,25 +73,21 @@ export class ArticleService {
     );
   }
 
-  public editArticle(article: ArticleItem): Observable<ArticlesResponse> {
+  public editArticle(articleData: FormData): Observable<CreateArticleResponse> {
     const url = `${this.url}/articles/update`;
-    const data = article;
-    return this._client.post<ArticlesResponse>(url, data).pipe(
-      map(
-        response =>
-          ({
-            message: response.message,
-            statusCode: response.statusCode,
-          }) as ArticlesResponse
-      ),
-      tap(() => {
+    const data = articleData;
+    return this._client.post<CreateArticleResponse>(url, data).pipe(
+      tap(response => {
         const articles = this.getArticlesFromLocalStorage();
         articles.map(art => {
-          if (art.id === article.id) {
-            art.title = article.title;
-            art.authors = article.authors;
-            art.date = article.date;
-            art.state = article.state;
+          if (art.id === (articleData.get('id') as string)) {
+            art.title = articleData.get('title') as string;
+            art.authors = JSON.parse(articleData.get('authors') as string);
+            art.date = articleData.get('date') as string;
+            art.state = articleData.get('state') as string;
+            if (response.evidenceUrl) {
+              art.evidenceUrl = response.evidenceUrl;
+            }
           }
           return art;
         });
@@ -114,7 +110,7 @@ export class ArticleService {
     );
   }
 
-  public loadArticlesOnStart() {
+  public loadArticlesOnStart(): Observable<ArticleItem[]> {
     const actualArticles = this.getArticlesFromLocalStorage();
     if (actualArticles.length > 0) {
       this.articleSubject.next(actualArticles);
@@ -171,7 +167,7 @@ export class ArticleService {
           authors: JSON.parse(articleData.get('authors') as string),
           date: articleData.get('date') as string,
           state: articleData.get('state') as string,
-          evidenceUrl: response.pdfUrl,
+          evidenceUrl: response.evidenceUrl,
         };
         this.createArticleInLocalStorage(new_article);
         console.log('Article created in local storage');

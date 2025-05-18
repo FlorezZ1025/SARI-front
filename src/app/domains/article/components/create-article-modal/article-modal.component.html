@@ -70,12 +70,7 @@
       [disabled]="articleForm.invalid"
       type="submit">
       @if (loading$) {
-        <mat-spinner
-          class="custom-spinner"
-          diameter="20"
-          color="primary"
-          mode="indeterminate">
-        </mat-spinner>
+        Creando...
       } @else {
         Crear
       }

@@ -64,7 +64,11 @@
       class="button-submit"
       [disabled]="loginForm.invalid"
       (click)="login()">
-      Iniciar sesión
+      @if (loading$) {
+        Iniciando sesión...
+      } @else {
+        Iniciar sesión
+      }
     </button>
     <p class="p">
       No tienes una cuenta?

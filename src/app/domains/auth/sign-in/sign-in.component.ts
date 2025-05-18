@@ -8,6 +8,7 @@ import {
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '@auth/services/auth.service';
 import { LoginRequest } from '@core/interfaces/login-request.interface';
+import { LoaderService } from '@core/services/loader.service';
 import { HotToastService } from '@ngneat/hot-toast';
 
 @Component({
@@ -21,8 +22,9 @@ export class SignInComponent {
   formBuilder = inject(FormBuilder);
   private _authService = inject(AuthService);
   private _toast = inject(HotToastService);
-
+  private _loaderService = inject(LoaderService);
   loginRequest: LoginRequest = {};
+  loading$ = false;
 
   loginForm: FormGroup = this.formBuilder.group({
     email: [
@@ -43,7 +45,9 @@ export class SignInComponent {
     if (AuthService.token) {
       this._router.navigate(['/']);
     }
-
+    this._loaderService.loading$.subscribe(loading => {
+      this.loading$ = loading;
+    });
     this.loginForm.valueChanges.subscribe(value => {
       Object.assign(this.loginRequest, value);
     });
@@ -55,8 +59,6 @@ export class SignInComponent {
         this._toast.success('Bienvenido a SARI', {
           style: {
             border: '2px solid #4CAF50',
-            padding: '20px',
-            fontSize: '20px',
           },
         });
         this._router.navigate(['/home']);
@@ -64,8 +66,6 @@ export class SignInComponent {
         this._toast.error(response.message, {
           style: {
             border: '2px solid #F44336',
-            padding: '20px',
-            fontSize: '20px',
           },
         });
       }

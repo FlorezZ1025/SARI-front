@@ -11,6 +11,7 @@ import { User } from '@core/interfaces/user.interface';
 import { tap } from 'rxjs';
 import { CustomValidators } from '@config/custom-validations';
 import { HotToastService } from '@ngneat/hot-toast';
+import { LoaderService } from '@core/services/loader.service';
 
 @Component({
   selector: 'app-sign-up',
@@ -23,7 +24,18 @@ export class SignUpComponent {
   formBuilder = inject(FormBuilder);
   private _authService = inject(AuthService);
   private _toast = inject(HotToastService);
+  private _loaderService = inject(LoaderService);
+  loading$ = false;
   user = {};
+
+  constructor(private _router: Router) {
+    this._loaderService.loading$.subscribe(loading => {
+      this.loading$ = loading;
+    });
+    this.registerForm.valueChanges.subscribe(value => {
+      Object.assign(this.user, value);
+    });
+  }
 
   UserRoleOptions = [
     { value: 'researcher', label: 'Investigador' },
@@ -91,11 +103,6 @@ export class SignUpComponent {
     ],
   });
 
-  constructor(private _router: Router) {
-    this.registerForm.valueChanges.subscribe(value => {
-      Object.assign(this.user, value);
-    });
-  }
   register() {
     console.log(this.user);
     this._authService
@@ -106,8 +113,6 @@ export class SignUpComponent {
             this._toast.success('Usuario registrado correctamente', {
               style: {
                 border: '2px solid #4CAF50',
-                padding: '20px',
-                fontSize: '20px',
               },
             });
             this._router.navigate(['/']);
@@ -115,8 +120,6 @@ export class SignUpComponent {
             this._toast.error(response.message, {
               style: {
                 border: '2px solid #f44336',
-                padding: '20px',
-                fontSize: '20px',
               },
             });
           }

@@ -42,7 +42,7 @@
     flex-direction: column;
     justify-content: space-between;
     width: 90%;
-    height: 90%;
+    height: 25em;
 
     >ul {
         text-align: left;

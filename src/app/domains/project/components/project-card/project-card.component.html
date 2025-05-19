@@ -1,18 +1,38 @@
 @let projectData = project();
 <div class="card">
-  <div class="badge">
-    <span>{{ projectData.status }}</span>
-  </div>
+  @switch (projectData.status) {
+    @case ('desarrollo') {
+      <span class="badge development">En desarrollo</span>
+    }
+    @case ('sometido') {
+      <span class="badge submitted">{{ projectData.status }}</span>
+    }
+    @case ('aceptado') {
+      <span class="badge accepted">{{ projectData.status }}</span>
+    }
+    @default {
+      <span class="badge finished">{{ projectData.status }}</span>
+    }
+  }
   <div class="project-item-options">
-    <button mat-icon-button (click)="editProject(projectData)">
-      <mat-icon>edit</mat-icon>
-    </button>
-    <button mat-icon-button (click)="deleteProject(projectData)">
-      <mat-icon>delete</mat-icon>
-    </button>
+    @if (projectData.status !== 'Finalizado') {
+      <!-- <button mat-icon-button (click)="editProject(projectData)">
+        <mat-icon>edit</mat-icon>
+      </button> -->
+      <button mat-icon-button (click)="deleteProject(projectData.id!)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    }
+    @if (projectData.supportUrl) {
+      <button mat-icon-button>
+        <a [href]="projectData.supportUrl" target="_blank">
+          <mat-icon>picture_as_pdf</mat-icon>
+        </a>
+      </button>
+    }
   </div>
   <h3>{{ projectData.title }}</h3>
-  <ul>
+  <ul style="text-transform: capitalize">
     @for (investigator of projectData.investigators; track $index) {
       <li>
         <p>{{ investigator }}</p>

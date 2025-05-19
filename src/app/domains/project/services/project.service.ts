@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { AuthService } from '@auth/services/auth.service';
 import { environment } from '@config/environments/environment';
-import { CreateProjectResponse } from '@core/interfaces/create-project-response.interface';
+import { ProjectResponse } from '@core/interfaces/project-response.interface';
 import { ProjectItem } from '@core/interfaces/project-item.interface';
 import { BehaviorSubject, catchError, map, Observable, of, tap } from 'rxjs';
 
@@ -23,7 +23,6 @@ export class ProjectService {
 
   constructor() {
     this._authService.currentUser$.subscribe(() => {
-      console.log('User changed:', this._authService.currentUser()?.name);
       if (AuthService.token === '') {
         this.setEmptyProjects();
         return;
@@ -46,10 +45,10 @@ export class ProjectService {
   }
   public createProject(projectData: FormData) {
     const url = `${this.url}/projects/create`;
-    return this._client.post<CreateProjectResponse>(url, projectData).pipe(
+    return this._client.post<ProjectResponse>(url, projectData).pipe(
       tap(response => {
         const newProject: ProjectItem = {
-          id: response.projectId,
+          id: response.idProject,
           title: projectData.get('title') as string,
           investigators: JSON.parse(projectData.get('investigators') as string),
           status: projectData.get('status') as string,
@@ -66,7 +65,7 @@ export class ProjectService {
               ({
                 message: error.error.message,
                 statusCode: error.status || 500,
-              }) as CreateProjectResponse
+              }) as ProjectResponse
           )
         )
       )
@@ -100,7 +99,6 @@ export class ProjectService {
       this.setProjectsInLocalStorage(pureProjects);
       return;
     }
-
     const existingIds = currentProjects.map(art => art.id);
     const newProjects = pureProjects.filter(
       article => !existingIds.includes(article.id)
@@ -110,7 +108,36 @@ export class ProjectService {
       this.setProjectsInLocalStorage([...currentProjects, ...newProjects]);
     }
   }
-
+  public deleteProject(id: string): Observable<ProjectResponse> {
+    const url = `${this.url}/projects/delete`;
+    const data = { id: id };
+    return this._client.post<ProjectResponse>(url, data).pipe(
+      map(
+        response =>
+          ({
+            message: response.message,
+            statusCode: response.statusCode,
+          }) as ProjectResponse
+      ),
+      tap(() => {
+        const projects = this.getProjectsFromLocalStorage();
+        const filteredProjects = projects.filter(project => project.id !== id);
+        this.setProjectsInLocalStorage(filteredProjects);
+        console.log('Project deleted:');
+      }),
+      catchError(error =>
+        of(error).pipe(
+          map(
+            error =>
+              ({
+                message: error.error.message,
+                statusCode: error.status || 500,
+              }) as ProjectResponse
+          )
+        )
+      )
+    );
+  }
   private setProjectsInLocalStorage(projects: ProjectItem[]) {
     localStorage.setItem(`projects ${this._userId}`, JSON.stringify(projects));
     this.projectSubject.next(projects);

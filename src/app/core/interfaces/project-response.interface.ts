@@ -1,6 +1,6 @@
-export interface CreateProjectResponse {
+export interface ProjectResponse {
   message: string;
   statusCode: number;
-  projectId?: string;
+  idProject?: string;
   supportUrl?: string;
 }

@@ -139,7 +139,7 @@ export class CreateProjectModalComponent implements AfterViewInit {
     formData.append('investigators', JSON.stringify(investigators));
     formData.append(
       'date',
-      formatDate(this.projectForm.value.date as string, 'yyyy-MM-dd', 'en-US')
+      formatDate(this.projectForm.value.date as string, 'dd/MM/yy', 'en-US')
     );
     formData.append('status', this.projectForm.value.status as string);
     formData.append(

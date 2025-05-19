@@ -3,8 +3,9 @@ import { inject, Injectable } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { AuthService } from '@auth/services/auth.service';
 import { environment } from '@config/environments/environment';
+import { CreateProjectResponse } from '@core/interfaces/create-project-response.interface';
 import { ProjectItem } from '@core/interfaces/project-item.interface';
-import { BehaviorSubject, catchError, Observable, of, tap } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, of, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -41,7 +42,37 @@ export class ProjectService {
     const projects = this.getProjectsFromLocalStorage();
     projects.push(project);
     localStorage.setItem(`projects ${this._userId}`, JSON.stringify(projects));
+    this.projectSubject.next(projects);
   }
+  public createProject(projectData: FormData) {
+    const url = `${this.url}/projects/create`;
+    return this._client.post<CreateProjectResponse>(url, projectData).pipe(
+      tap(response => {
+        const newProject: ProjectItem = {
+          id: response.projectId,
+          title: projectData.get('title') as string,
+          investigators: JSON.parse(projectData.get('investigators') as string),
+          status: projectData.get('status') as string,
+          date: projectData.get('date') as string,
+          formulatedType: projectData.get('formulatedType') as string,
+          supportUrl: response.supportUrl,
+        };
+        this.createProjectInLocalStorage(newProject);
+      }),
+      catchError(error =>
+        of(error).pipe(
+          map(
+            error =>
+              ({
+                message: error.error.message,
+                statusCode: error.status || 500,
+              }) as CreateProjectResponse
+          )
+        )
+      )
+    );
+  }
+
   private getProjectsFromLocalStorage(): ProjectItem[] {
     const projects = localStorage.getItem(`projects ${this._userId}`);
     return projects ? JSON.parse(projects) : [];

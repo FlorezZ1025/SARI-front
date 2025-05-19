@@ -10,11 +10,11 @@ import { ProjectItem } from '@core/interfaces/project-item.interface';
   styleUrl: './project-card.component.css',
 })
 export class ProjectCardComponent {
+  project = input.required<ProjectItem>();
   deleteProject(_t1: ProjectItem) {
     throw new Error('Method not implemented.');
   }
   editProject(_t1: ProjectItem) {
     throw new Error('Method not implemented.');
   }
-  project = input.required<ProjectItem>();
 }

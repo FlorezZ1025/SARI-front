@@ -1,0 +1,89 @@
+<div mat-dialog-tittle class="dialog-header">
+  <h1>Proyecto nuevo</h1>
+</div>
+<form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
+  <div mat-dialog-content class="content">
+    <div class="row">
+      <mat-form-field class="full-width" appearence="outline">
+        <mat-label>Nombre del proyecto</mat-label>
+        <input
+          matInput
+          placeholder="Nombre del proyecto"
+          formControlName="title"
+          required />
+      </mat-form-field>
+    </div>
+    <div class="row">
+      <mat-form-field class="full-width" appearence="outline">
+        <mat-label>Otros investigadores</mat-label>
+        <input
+          matInput
+          placeholder="No tiene que digitar su nombre"
+          formControlName="investigators" />
+      </mat-form-field>
+    </div>
+    <div class="row">
+      <mat-form-field class="full-width" appearance="fill">
+        <mat-label>Estado del proyecto</mat-label>
+        <mat-select formControlName="status" required>
+          <mat-option value="desarrollo">En desarrollo</mat-option>
+          <mat-option value="sometido">Sometido</mat-option>
+          <mat-option value="aceptado">Aceptado</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    @let status = this.projectForm.get('status')?.value;
+    <div class="row">
+      <mat-form-field class="full-width" appearance="fill">
+        <mat-label
+          >Fecha {{ status === 'desarrollo' ? 'de inicio' : status }}</mat-label
+        >
+        <input matInput [matDatepicker]="picker" formControlName="date" />
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </div>
+    <div class="row">
+      <mat-form-field class="full-width" appearance="fill">
+        <mat-label>Tipo de formulado</mat-label>
+        <mat-select formControlName="formulatedType" required>
+          <mat-option value="innovacion">Innovacion</mat-option>
+          <mat-option value="extension">Extension</mat-option>
+          <mat-option value="investigacion">Investigacion</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="row file-evidence full-width">
+      @if (!fileSelected) {
+        <mat-icon color="primary">description</mat-icon>
+        <mat-label>Adjuntar Soporte</mat-label>
+      } @else {
+        <mat-icon>check</mat-icon>
+        <mat-label>¡Archivo Adjuntado!</mat-label>
+      }
+      <input
+        type="file"
+        placeholder="Ingresa un PDF"
+        accept=".pdf"
+        (change)="onFileSelected($event)"
+        required />
+    </div>
+  </div>
+  <div mat-dialog-actions class="dialog-actions">
+    <button
+      mat-button
+      color="primary"
+      [disabled]="projectForm.invalid"
+      type="submit">
+      @if (loading$) {
+        Creando...
+      } @else {
+        Crear
+      }
+    </button>
+  </div>
+</form>

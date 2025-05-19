@@ -6,6 +6,7 @@ import { ProjectItem } from '@core/interfaces/project-item.interface';
 import { LoaderService } from '@core/services/loader.service';
 import { ModalService } from '@core/services/modal.service';
 import { HotToastService } from '@ngneat/hot-toast';
+import { CreateProjectModalComponent } from '@project/components/create-project-modal/create-project-modal.component';
 import { ProjectCardComponent } from '@project/components/project-card/project-card.component';
 import { ProjectService } from '@project/services/project.service';
 
@@ -51,7 +52,9 @@ export class ProjectsComponent implements OnInit {
     }
   }
   createProject() {
-    throw new Error('Method not implemented.');
+    this._modalSvc.openModal<CreateProjectModalComponent, ProjectItem>(
+      CreateProjectModalComponent
+    );
   }
 
   createproject() {

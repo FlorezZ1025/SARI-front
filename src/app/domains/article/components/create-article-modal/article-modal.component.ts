@@ -35,14 +35,12 @@ const MATERIAL_MODULES = [
   MatSelectModule,
   MatProgressSpinnerModule,
   MatIconModule,
-  //Este no es pero los estilos se demoran en cargar
-  ReactiveFormsModule,
 ];
 
 @Component({
   selector: 'app-create-article-modal',
   standalone: true,
-  imports: [MATERIAL_MODULES],
+  imports: [ReactiveFormsModule, ...MATERIAL_MODULES],
   templateUrl: './article-modal.component.html',
   styleUrl: './article-modal.component.css',
 })
@@ -124,9 +122,6 @@ export class CreateArticleModalComponent implements AfterViewInit {
     this._articleService
       .createArticle(formDataToSend)
       .pipe(
-        tap(() => {
-          console.log(formDataToSend);
-        }),
         tap(response => {
           if (response.statusCode === 200) {
             this._toast.success('Artículo creado correctamente', {

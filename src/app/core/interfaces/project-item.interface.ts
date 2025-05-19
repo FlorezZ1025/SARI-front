@@ -5,6 +5,7 @@ export interface ProjectItem {
   date: string;
   status: string;
   type?: string;
+  formulatedType?: string;
   evidence?: File;
-  evidenceUrl?: string;
+  supportUrl?: string;
 }

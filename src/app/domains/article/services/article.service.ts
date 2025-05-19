@@ -157,10 +157,6 @@ export class ArticleService {
 
     return this._client.post<CreateArticleResponse>(url, articleData).pipe(
       tap(response => {
-        console.log('Article created in DB');
-        console.log(response);
-      }),
-      tap(response => {
         const new_article: ArticleItem = {
           id: response.idArticle,
           title: articleData.get('title') as string,
